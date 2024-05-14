@@ -2,6 +2,7 @@
     (:require [scicloj.clay.v2.api :as clay]
             [clojure.string :as str]
             [tablecloth.api :as tc]
+            [tablecloth.column.api :as tcc]
             [scicloj.clay.v2.api :as clay]
             [libpython-clj2.require :refer [require-python]]
             [libpython-clj2.python :refer [py. py.. py.-] :as py]
@@ -12,7 +13,6 @@
   (-> s
     (str/lower-case)
     (str/replace #" " "-")))
-
 
 (-> "data/nasdaq-instrument-list.csv"
   (tc/dataset {:key-fn (comp keyword to-kebab-case)})
@@ -38,16 +38,23 @@
                              :WIDTH 1000
                              :YSCALE {:type "log"}}))
 
+
+(-> "data/instruments/1INCH-USD.csv"
+    (tc/dataset {:key-fn (comp keyword to-kebab-case)})
+    (tc/head 100))
+
 (-> "data/instruments/1INCH-USD.csv"
   (tc/dataset {:key-fn (comp keyword to-kebab-case)})
   (tc/map-columns :pct-change [:open :close] (fn [open close] (-> close
                                                                   (- open)
-                                                                  (* 100))))
+                                                                   (* 100))))
+  (tc/map-columns :highly-volatile [:pct-change] #(or (tcc/> % 6.0) (tcc/< % -6.0)))
   (hanami/plot ht/point-chart {
-                               :X :date
-                               :Y :pct-change
-                               :XTYPE :nominal
+                               :X     :date
+                               :Y     :pct-change
+                               :XTYPE :temporal
                                :WIDTH 1000
+                               :COLOR {:field :highly-volatile}
                                }))
 
 ;; TODO
