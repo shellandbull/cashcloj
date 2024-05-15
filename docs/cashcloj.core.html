@@ -47,73 +47,49 @@
 </style>
 
 <title>Clay</title></head><body data-spy="scroll" data-target="#toc" style="margin:auto;">
-<script src="cashcloj.core_files/md-default2.js" type="text/javascript"></script><script src="cashcloj.core_files/md-default3.js" type="text/javascript"></script>
-<div class="container"><div class="row"><div class="col-sm-12"><div><div><div style="margin:15px;"><div><pre><code class="sourceCode language-clojure printed-clojure">#error {
- :cause "error=2, No such file or directory"
- :via
- [{:type java.io.IOException
-   :message "Cannot run program \"quarto\": error=2, No such file or directory"
-   :at [java.lang.ProcessBuilder start "ProcessBuilder.java" 1170]}
-  {:type java.io.IOException
-   :message "error=2, No such file or directory"
-   :at [java.lang.ProcessImpl forkAndExec "ProcessImpl.java" -2]}]
- :trace
- [[java.lang.ProcessImpl forkAndExec "ProcessImpl.java" -2]
-  [java.lang.ProcessImpl &lt;init&gt; "ProcessImpl.java" 295]
-  [java.lang.ProcessImpl start "ProcessImpl.java" 225]
-  [java.lang.ProcessBuilder start "ProcessBuilder.java" 1126]
-  [java.lang.ProcessBuilder start "ProcessBuilder.java" 1089]
-  [java.lang.Runtime exec "Runtime.java" 681]
-  [clojure.java.shell$sh invokeStatic "shell.clj" 113]
-  [clojure.java.shell$sh doInvoke "shell.clj" 79]
-  [clojure.lang.RestFn invoke "RestFn.java" 436]
-  [scicloj.clay.v2.make$handle_single_source_spec_BANG_ invokeStatic "make.clj" 266]
-  [scicloj.clay.v2.make$handle_single_source_spec_BANG_ invoke "make.clj" 226]
-  [clojure.core$mapv$fn__8535 invoke "core.clj" 6979]
-  [clojure.lang.ArrayChunk reduce "ArrayChunk.java" 58]
-  [clojure.core.protocols$fn__8244 invokeStatic "protocols.clj" 136]
-  [clojure.core.protocols$fn__8244 invoke "protocols.clj" 124]
-  [clojure.core.protocols$fn__8204$G__8199__8213 invoke "protocols.clj" 19]
-  [clojure.core.protocols$seq_reduce invokeStatic "protocols.clj" 31]
-  [clojure.core.protocols$fn__8236 invokeStatic "protocols.clj" 75]
-  [clojure.core.protocols$fn__8236 invoke "protocols.clj" 75]
-  [clojure.core.protocols$fn__8178$G__8173__8191 invoke "protocols.clj" 13]
-  [clojure.core$reduce invokeStatic "core.clj" 6886]
-  [clojure.core$mapv invokeStatic "core.clj" 6970]
-  [clojure.core$mapv invoke "core.clj" 6970]
-  [scicloj.clay.v2.make$make_BANG_ invokeStatic "make.clj" 320]
-  [scicloj.clay.v2.make$make_BANG_ invoke "make.clj" 303]
-  [scicloj.clay.v2.api$make_BANG_ invokeStatic "api.clj" 30]
-  [scicloj.clay.v2.api$make_BANG_ invoke "api.clj" 29]
-  [cashcloj.core$eval42498 invokeStatic "form-init10426622492194946998.clj" 1]
-  [cashcloj.core$eval42498 invoke "form-init10426622492194946998.clj" 1]
-  [clojure.lang.Compiler eval "Compiler.java" 7194]
-  [clojure.lang.Compiler eval "Compiler.java" 7149]
-  [clojure.core$eval invokeStatic "core.clj" 3215]
-  [clojure.core$eval invoke "core.clj" 3211]
-  [nrepl.middleware.interruptible_eval$evaluate$fn__33694$fn__33695 invoke "interruptible_eval.clj" 87]
-  [clojure.lang.AFn applyToHelper "AFn.java" 152]
-  [clojure.lang.AFn applyTo "AFn.java" 144]
-  [clojure.core$apply invokeStatic "core.clj" 667]
-  [clojure.core$with_bindings_STAR_ invokeStatic "core.clj" 1990]
-  [clojure.core$with_bindings_STAR_ doInvoke "core.clj" 1990]
-  [clojure.lang.RestFn invoke "RestFn.java" 425]
-  [nrepl.middleware.interruptible_eval$evaluate$fn__33694 invoke "interruptible_eval.clj" 87]
-  [clojure.main$repl$read_eval_print__9206$fn__9209 invoke "main.clj" 437]
-  [clojure.main$repl$read_eval_print__9206 invoke "main.clj" 437]
-  [clojure.main$repl$fn__9215 invoke "main.clj" 458]
-  [clojure.main$repl invokeStatic "main.clj" 458]
-  [clojure.main$repl doInvoke "main.clj" 368]
-  [clojure.lang.RestFn invoke "RestFn.java" 1523]
-  [nrepl.middleware.interruptible_eval$evaluate invokeStatic "interruptible_eval.clj" 84]
-  [nrepl.middleware.interruptible_eval$evaluate invoke "interruptible_eval.clj" 56]
-  [nrepl.middleware.interruptible_eval$interruptible_eval$fn__33727$fn__33731 invoke "interruptible_eval.clj" 152]
-  [clojure.lang.AFn run "AFn.java" 22]
-  [nrepl.middleware.session$session_exec$main_loop__33797$fn__33801 invoke "session.clj" 218]
-  [nrepl.middleware.session$session_exec$main_loop__33797 invoke "session.clj" 217]
-  [clojure.lang.AFn run "AFn.java" 22]
-  [java.lang.Thread run "Thread.java" 1583]]}
-</code></pre></div></div></div></div></div></div></div><script type="text/javascript">/*!
+<script src="cashcloj.core_files/html-default2.js" type="text/javascript"></script><script src="cashcloj.core_files/html-default3.js" type="text/javascript"></script><script src="cashcloj.core_files/vega4.js" type="text/javascript"></script><script src="cashcloj.core_files/vega5.js" type="text/javascript"></script><script src="cashcloj.core_files/vega6.js" type="text/javascript"></script>
+<div class="container"><div class="row"><div class="col-sm-12"><div><div><div style="margin:15px;"><div><pre><code class="sourceCode language-clojure source-clojure bg-light">(ns cashcloj.core
+    (:require [scicloj.clay.v2.api :as clay]
+            [clojure.string :as str]
+            [tablecloth.api :as tc]
+            [tablecloth.column.api :as tcc]
+            [scicloj.clay.v2.api :as clay]
+            [scicloj.noj.v1.vis.hanami :as hanami]
+            [scicloj.kindly.v4.kind :as kind]
+            [aerial.hanami.templates :as ht]))</code></pre></div></div><div style="margin:15px;"><div><h1 id="scicloj-explorations-part-1-|-nasdaq-&amp;-cryptocurrency-timeseries"><a href="https://scicloj.github.io/">Scicloj</a> explorations part 1 | NASDAQ & Cryptocurrency timeseries</h1><p>This is my first exploration in the world of data science using the Scicloj stack. I decided to give it a go due to it's <a href="https://docs.cider.mx/cider/usage/interactive_programming.html">interactive programming</a> capacities. The concept was introduced to me during a <a href="https://londonclojurians.org/">London Clojurians</a> talk <a href="https://www.youtube.com/watch?v=eUFf3-og_-Y">"From data to insights: Clojure for data deep dive"</a>.</p><p>This HTML document was rendered using <a href="https://github.com/scicloj/clay">Clay</a>, which evaluated a <code>.clj</code> file that behaves like a notebook</p><p><strong>What's the stack?</strong></p><ul><li><p><a href="https://www.spacemacs.org/">Spacemacs</a> as my text editor. It comes with plugins for <a href="https://github.com/scicloj/clay">Clay</a> & <a href="https://github.com/clojure-emacs/cider">Clojure via Cider</a></p></li><li><p><a href="https://clojure.org/">Clojure</a> A dynamically typed lisp dialect that calls the JVM home</p></li><li><p><a href="https://scicloj.github.io/tablecloth">Tablecloth</a> a <code>dataframe</code> like manipulation library. Similar to Pandas</p></li><li><p><a href="https://github.com/scicloj/clay">Clay</a> for data visualizations in a dynamic fashion</p></li></ul><p><strong>What'll be doing</strong></p><p>I downloaded timeseries price data from all the instruments from <a href="https://www.nasdaq.com/">NASDAQ</a> and the top 250 cryptocurrencies from <a href="https://www.binance.com/">Binance</a>. In this post we'll perform some simple operations on the dataset, but in the future I hope to publish some more sophisticated ML studies alongside some richer visualisations</p><p>In this first exploration I will keep things extremely simple.</p><p>We'll visualise the data as a table, do some transformations and render some charts.</p><p><strong>How I'm doing it</strong></p><p>Spacemacs has packages for Clay & Cider. I can evaluate the code on my editor as I go and either have it pop onto a buffer or even render it's output as HTML.</p></div></div><div style="margin:15px;"><div><h2 id="reading-a-dataset">Reading a dataset</h2><p>It's really simple. Just invoke <code>tc/dataset</code> over a URL or filename and you'll immediately get a primitive in which is very easy to operate on.</p><p>In this example I just select a few columns and keep the top 10.</p><p>I also added a function <code>to-kebab-case</code> which casts the datasets keys in <code>this-format</code></p><p><a href="https://scicloj.github.io/tablecloth/">tablecloth documentation</a></p></div></div><div style="margin:15px;"><div><pre><code class="sourceCode language-clojure source-clojure bg-light">(defn to-kebab-case [s]
+  (-&gt; s
+      (str/lower-case)
+      (str/replace #" " "-")))</code></pre></div></div><div style="margin:15px;"><div><pre><code class="sourceCode language-clojure source-clojure bg-light">(-&gt; "data/nasdaq-instrument-list.csv"
+  (tc/dataset {:key-fn (comp keyword to-kebab-case)})
+  (tc/select-columns [:symbol :name])
+  (tc/head 10))</code></pre></div></div><div style="margin:15px;"><div class="clay-dataset"><p>data/nasdaq-instrument-list.csv [10 2]:</p><table class="table"><thead><tr><th>:symbol</th><th>:name</th></tr></thead><tbody><tr><td>A</td><td>Agilent Technologies Inc. Common Stock</td></tr><tr><td>AA</td><td>Alcoa Corporation Common Stock</td></tr><tr><td>AACG</td><td>ATA Creativity Global American Depositary Shares</td></tr><tr><td>AACI</td><td>Armada Acquisition Corp. I Common Stock</td></tr><tr><td>AACIW</td><td>Armada Acquisition Corp. I Warrant</td></tr><tr><td>AACT</td><td>Ares Acquisition Corporation II Class A Ordinary Shares</td></tr><tr><td>AADI</td><td>Aadi Bioscience Inc. Common Stock</td></tr><tr><td>AAGR</td><td>African Agriculture Holdings Inc. Common Stock</td></tr><tr><td>AAGRW</td><td>African Agriculture Holdings Inc. Warrant</td></tr><tr><td>AAL</td><td>American Airlines Group Inc. Common Stock</td></tr></tbody></table></div></div><div style="margin:15px;"><div><p>Ordering is very easy too</p></div></div><div style="margin:15px;"><div><pre><code class="sourceCode language-clojure source-clojure bg-light">(-&gt; "data/nasdaq-instrument-list.csv"
+  (tc/dataset {:key-fn (comp keyword to-kebab-case)})
+  (tc/order-by :volume)
+  (tc/head 10))</code></pre></div></div><div style="margin:15px;"><div class="clay-dataset"><p>data/nasdaq-instrument-list.csv [10 11]:</p><table class="table"><thead><tr><th>:symbol</th><th>:name</th><th>:last-sale</th><th style="text-align:right;">:net-change</th><th>:%-change</th><th style="text-align:right;">:market-cap</th><th>:country</th><th style="text-align:right;">:ipo-year</th><th style="text-align:right;">:volume</th><th>:sector</th><th>:industry</th></tr></thead><tbody><tr><td>CNFRZ</td><td>Conifer Holdings Inc. 9.75% Senior Unsecured Notes due 2028</td><td>$11.50</td><td style="text-align:right;">0.0</td><td>0.00%</td><td style="text-align:right;">1.40563132E+08</td><td>United States</td><td style="text-align:right;"></td><td style="text-align:right;">1</td><td></td><td></td></tr><tr><td>CFFS</td><td>CF Acquisition Corp. VII Class A Common Stock</td><td>$10.84</td><td style="text-align:right;">0.0</td><td>0.00%</td><td style="text-align:right;">0.00000000E+00</td><td>United States</td><td style="text-align:right;">2022</td><td style="text-align:right;">1</td><td>Finance</td><td>Blank Checks</td></tr><tr><td>PDYNW</td><td>Palladyne AI Corp Warrants</td><td>$0.0505</td><td style="text-align:right;">0.0</td><td>0.00%</td><td style="text-align:right;">1.30795000E+06</td><td>United States</td><td style="text-align:right;"></td><td style="text-align:right;">1</td><td>Industrials</td><td>Industrial Machinery/Components</td></tr><tr><td>KACL</td><td>Kairous Acquisition Corp. Limited Ordinary Shares</td><td>$11.72</td><td style="text-align:right;">0.0</td><td>0.00%</td><td style="text-align:right;">0.00000000E+00</td><td>Malaysia</td><td style="text-align:right;">2022</td><td style="text-align:right;">1</td><td>Finance</td><td>Blank Checks</td></tr><tr><td>AONCW</td><td>American Oncology Network Inc. Warrant</td><td>$0.265</td><td style="text-align:right;">0.0</td><td>0.00%</td><td style="text-align:right;">9.46486300E+06</td><td>United States</td><td style="text-align:right;">2021</td><td style="text-align:right;">1</td><td>Health Care</td><td>Medical/Nursing Services</td></tr><tr><td>BBLGW</td><td>Bone Biologics Corp Warrants</td><td>$23.79</td><td style="text-align:right;">0.0</td><td>0.00%</td><td style="text-align:right;">1.27095220E+07</td><td>United States</td><td style="text-align:right;"></td><td style="text-align:right;">1</td><td>Health Care</td><td>Industrial Specialties</td></tr><tr><td>PMGM</td><td>Priveterra Acquisition Corp. II Class A Common Stock</td><td>$11.09</td><td style="text-align:right;">0.0</td><td>0.00%</td><td style="text-align:right;">0.00000000E+00</td><td>United States</td><td style="text-align:right;">2021</td><td style="text-align:right;">1</td><td>Finance</td><td>Blank Checks</td></tr><tr><td>SVREW</td><td>SaverOne 2014 Ltd. Warrant</td><td>$0.099</td><td style="text-align:right;">0.0</td><td>0.00%</td><td style="text-align:right;">6.88834400E+06</td><td>Israel</td><td style="text-align:right;">2022</td><td style="text-align:right;">1</td><td>Technology</td><td>EDP Services</td></tr><tr><td>NTRBW</td><td>Nutriband Inc. Warrant</td><td>$0.55</td><td style="text-align:right;">0.0</td><td>0.00%</td><td style="text-align:right;">6.03342900E+06</td><td>United States</td><td style="text-align:right;"></td><td style="text-align:right;">1</td><td>Health Care</td><td>Industrial Specialties</td></tr><tr><td>CCZ</td><td>Comcast Holdings ZONES</td><td>$54.81</td><td style="text-align:right;">0.0</td><td>0.00%</td><td style="text-align:right;">2.15053944E+11</td><td>United States</td><td style="text-align:right;"></td><td style="text-align:right;">1</td><td>Telecommunications</td><td>Cable & Other Pay Television Services</td></tr></tbody></table></div></div><div style="margin:15px;"><div><p>I now know that I want to re-use <code>data/nasdaq-instrument-list.csv</code> so I'll extract it onto it's own expression via <code>def</code></p></div></div><div style="margin:15px;"><div><pre><code class="sourceCode language-clojure source-clojure bg-light">(def nasdaq-instruments
+  (-&gt; "data/nasdaq-instrument-list.csv"
+      (tc/dataset {:key-fn (comp keyword to-kebab-case)})))</code></pre></div></div><div style="margin:15px;"><div><pre><code class="sourceCode language-clojure source-clojure bg-light">(-&gt; nasdaq-instruments
+  (tc/group-by [:country])
+  (tc/aggregate {:count tc/row-count})
+  (hanami/plot ht/bar-chart {
+                             :X :country
+                             :Y :count
+                             :XTYPE :nominal
+                             :WIDTH 1000
+                             :YSCALE {:type "log"}}))</code></pre></div></div><div style="margin:15px;"><div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"scale":{"type":"log"},"field":"count","type":"quantitative"},"x":{"field":"country","type":"nominal"}},"usermeta":{"embedOptions":{"renderer":"svg"}},"mark":{"type":"bar","tooltip":true},"width":1000,"background":"floralwhite","height":300,"data":{"url":"cashcloj.core_files\/0.csv","format":{"type":"csv"}}});</script></div></div><div style="margin:15px;"><div><h2 id="plotting-data">Plotting data</h2><p><a href="https://github.com/jsa-aerial/hanami">hanami</a> makes use of the <a href="https://vega.github.io/vega-lite/">VEGA LITE</a> specification for plotting charts</p><p>It works seamlessly with <code>tc/dataset</code>. Look at how smooth this code is! I am:</p><ul><li><p>Parsing a CSV with time series data</p></li><li><p>Adding 2 new columns <code>pct-change</code> and <code>highly-volatile</code></p></li><li><p>Plotting a point chart where highly volatile data points are highlighted in a different colour</p></li></ul></div></div><div style="margin:15px;"><div><pre><code class="sourceCode language-clojure source-clojure bg-light">(-&gt; "data/instruments/1INCH-USD.csv"
+    (tc/dataset {:key-fn (comp keyword to-kebab-case)})
+    (tc/head 10))</code></pre></div></div><div style="margin:15px;"><div class="clay-dataset"><p>data/instruments/1INCH-USD.csv [10 7]:</p><table class="table"><thead><tr><th>:date</th><th style="text-align:right;">:adj-close</th><th style="text-align:right;">:close</th><th style="text-align:right;">:high</th><th style="text-align:right;">:low</th><th style="text-align:right;">:open</th><th style="text-align:right;">:volume</th></tr></thead><tbody><tr><td>2023-07-14</td><td style="text-align:right;">0.33524400</td><td style="text-align:right;">0.33524400</td><td style="text-align:right;">0.35731199</td><td style="text-align:right;">0.32619700</td><td style="text-align:right;">0.34957400</td><td style="text-align:right;">22820525</td></tr><tr><td>2023-07-15</td><td style="text-align:right;">0.36894101</td><td style="text-align:right;">0.36894101</td><td style="text-align:right;">0.37873101</td><td style="text-align:right;">0.33065999</td><td style="text-align:right;">0.33529899</td><td style="text-align:right;">79156563</td></tr><tr><td>2023-07-16</td><td style="text-align:right;">0.43362901</td><td style="text-align:right;">0.43362901</td><td style="text-align:right;">0.44532201</td><td style="text-align:right;">0.36456200</td><td style="text-align:right;">0.36915800</td><td style="text-align:right;">231842663</td></tr><tr><td>2023-07-17</td><td style="text-align:right;">0.40429100</td><td style="text-align:right;">0.40429100</td><td style="text-align:right;">0.58109099</td><td style="text-align:right;">0.39502901</td><td style="text-align:right;">0.43365800</td><td style="text-align:right;">776148354</td></tr><tr><td>2023-07-18</td><td style="text-align:right;">0.35965601</td><td style="text-align:right;">0.35965601</td><td style="text-align:right;">0.40430599</td><td style="text-align:right;">0.35475701</td><td style="text-align:right;">0.40430599</td><td style="text-align:right;">123548475</td></tr><tr><td>2023-07-19</td><td style="text-align:right;">0.33714199</td><td style="text-align:right;">0.33714199</td><td style="text-align:right;">0.36555001</td><td style="text-align:right;">0.33557901</td><td style="text-align:right;">0.35963100</td><td style="text-align:right;">100891521</td></tr><tr><td>2023-07-20</td><td style="text-align:right;">0.32879999</td><td style="text-align:right;">0.32879999</td><td style="text-align:right;">0.35777801</td><td style="text-align:right;">0.32261801</td><td style="text-align:right;">0.33715999</td><td style="text-align:right;">101280510</td></tr><tr><td>2023-07-21</td><td style="text-align:right;">0.33631900</td><td style="text-align:right;">0.33631900</td><td style="text-align:right;">0.34398800</td><td style="text-align:right;">0.32493699</td><td style="text-align:right;">0.32882401</td><td style="text-align:right;">65835792</td></tr><tr><td>2023-07-22</td><td style="text-align:right;">0.32811299</td><td style="text-align:right;">0.32811299</td><td style="text-align:right;">0.33769199</td><td style="text-align:right;">0.32699901</td><td style="text-align:right;">0.33629000</td><td style="text-align:right;">32974711</td></tr><tr><td>2023-07-23</td><td style="text-align:right;">0.32757801</td><td style="text-align:right;">0.32757801</td><td style="text-align:right;">0.33134499</td><td style="text-align:right;">0.32585999</td><td style="text-align:right;">0.32810900</td><td style="text-align:right;">33972196</td></tr></tbody></table></div></div><div style="margin:15px;"><div><pre><code class="sourceCode language-clojure source-clojure bg-light">(-&gt; "data/instruments/1INCH-USD.csv"
+  (tc/dataset {:key-fn (comp keyword to-kebab-case)})
+  (tc/map-columns :pct-change [:open :close] (fn [open close] (-&gt; close
+                                                                  (- open)
+                                                                   (* 100))))
+  (tc/map-columns :highly-volatile [:pct-change] #(or (tcc/&gt; % 6.0) (tcc/&lt; % -6.0)))
+  (hanami/plot ht/point-chart {
+                               :X     :date
+                               :Y     :pct-change
+                               :XTYPE :temporal
+                               :WIDTH 1000
+                               :COLOR {:field :highly-volatile}
+                               }))</code></pre></div></div><div style="margin:15px;"><div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"field":"pct-change","type":"quantitative"},"color":{"field":"highly-volatile"},"x":{"field":"date","type":"temporal"}},"usermeta":{"embedOptions":{"renderer":"svg"}},"mark":{"type":"circle","tooltip":true},"width":1000,"background":"floralwhite","height":300,"data":{"url":"cashcloj.core_files\/1.csv","format":{"type":"csv"}}});</script></div></div><div style="margin:15px;"><div><h2 id="closing-remarks">Closing remarks</h2><p>I initially thought this would be a how-to piece but it evolved into being a review piece.</p><p>My only points of comparison are to use Snowflake + SQL to plot, slice & dice.</p><p>Or a more widely adopted solution like Jupyter, Numpy & others.</p><p>I find this stack to be oddly entising, it's just so simple and highly declarative, there's python interop, lazily evaluated collections may mean its a lot less code to write than if I were using Numpy. Time will only tell</p><p>Stay tuned.</p></div></div><div style="margin:15px;"><div style="background-color:grey;height:2px;width:100%;"></div></div><div style="margin:15px;"><div><pre><small><small>source: src/cashcloj/core.clj</small></small></pre></div></div></div></div></div></div></div><script type="text/javascript">/*!
   Highlight.js v11.9.0 (git: b7ec4bfafc)
   (c) 2006-2023 undefined and other contributors
   License: BSD-3-Clause

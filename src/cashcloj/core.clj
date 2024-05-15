@@ -8,59 +8,75 @@
             [scicloj.kindly.v4.kind :as kind]
             [aerial.hanami.templates :as ht]))
 
-
+^{:kindly/hide-code true}
 (kind/md ["
 # [Scicloj](https://scicloj.github.io/) explorations part 1 | NASDAQ & Cryptocurrency timeseries
 
-This is my first exploration in the world of data science under the hand of Scicloj.
-I decided to give this stack a try due to its [interactive programming](https://docs.cider.mx/cider/usage/interactive_programming.html) capacities.
-This concept was introduced to me during a [London Clojurians](https://londonclojurians.org/) talk [\"From data to insights: Clojure for data deep dive\"](https://www.youtube.com/watch?v=eUFf3-og_-Y).
+This is my first exploration in the world of data science using the Scicloj stack.
+I decided to give it a go due to it's [interactive programming](https://docs.cider.mx/cider/usage/interactive_programming.html) capacities.
+The concept was introduced to me during a [London Clojurians](https://londonclojurians.org/) talk [\"From data to insights: Clojure for data deep dive\"](https://www.youtube.com/watch?v=eUFf3-og_-Y).
 
-This file you are looking at is rendered using [Clay](https://github.com/scicloj/clay).
+This HTML document was rendered using [Clay](https://github.com/scicloj/clay), which evaluated a `.clj` file that behaves like a notebook
 
 **What's the stack?**
 
-- [Spacemacs](https://www.spacemacs.org/) for my text editor as it comes with plugins for [Clay](https://github.com/scicloj/clay) & [Cider](https://github.com/clojure-emacs/cider)
+- [Spacemacs](https://www.spacemacs.org/) as my text editor. It comes with plugins for [Clay](https://github.com/scicloj/clay) & [Clojure via Cider](https://github.com/clojure-emacs/cider)
 - [Clojure](https://clojure.org/) A dynamically typed lisp dialect that calls the JVM home
 - [Tablecloth](https://scicloj.github.io/tablecloth) a `dataframe` like manipulation library. Similar to Pandas
 - [Clay](https://github.com/scicloj/clay) for data visualizations in a dynamic fashion
 
 **What'll be doing**
 
-I downloaded all the instruments from [NASDAQ](https://www.nasdaq.com/) and the top 250 cryptocurrencies from [Binance](https://www.binance.com/). We are going to
-go ahead and explore these datasets.
+I downloaded timeseries price data from all the instruments from [NASDAQ](https://www.nasdaq.com/) and the top 250 cryptocurrencies from [Binance](https://www.binance.com/). In this post we'll
+perform some simple operations on the dataset, but in the future I hope to publish some more sophisticated ML studies alongside some richer visualisations
 
-For the purposes of this first exploration I will keep things extremely simple. We'll visualise the data as a table, perform simple transformations & plot it onto a few simple charts.
+In this first exploration I will keep things extremely simple.
+
+We'll visualise the data as a table, do some transformations and render some charts.
 
 **How I'm doing it**
 
-With some help & documentation I have set up my spacemacs so I can cast functions onto either a buffer or Clay.
-This way I can immediately get feedback on each single function I evaluate.
+Spacemacs has packages for Clay & Cider. I can evaluate the code on my editor as I go and either have it pop onto a buffer or even render it's output as HTML.
 "])
 
+^{:kindly/hide-code true}
 (kind/md ["
 ## Reading a dataset
 
-It's really simple just invoke `tc/dataset` over a URL or filename and you'll immediately get a primitive in which is very
+It's really simple. Just invoke `tc/dataset` over a URL or filename and you'll immediately get a primitive in which is very
 easy to operate on.
 
-In this example I just select a few columns and keep the top 50
+In this example I just select a few columns and keep the top 10.
+
+I also added a function `to-kebab-case` which casts the datasets keys in `this-format`
+
+[tablecloth documentation](https://scicloj.github.io/tablecloth/)
 "])
+
+(defn to-kebab-case [s]
+  (-> s
+      (str/lower-case)
+      (str/replace #" " "-")))
 
 (-> "data/nasdaq-instrument-list.csv"
   (tc/dataset {:key-fn (comp keyword to-kebab-case)})
   (tc/select-columns [:symbol :name])
-  (tc/head 50))
+  (tc/head 10))
 
-(defn to-kebab-case [s]
-  (-> s
-    (str/lower-case)
-    (str/replace #" " "-")))
+^{:kindly/hide-code true}
+(kind/md ["
+Ordering is very easy too
+"])
 
 (-> "data/nasdaq-instrument-list.csv"
   (tc/dataset {:key-fn (comp keyword to-kebab-case)})
   (tc/order-by :volume)
   (tc/head 10))
+
+^{:kindly/hide-code true}
+(kind/md ["
+I now know that I want to re-use `data/nasdaq-instrument-list.csv` so I'll extract it onto it's own expression via `def`
+"])
 
 (def nasdaq-instruments
   (-> "data/nasdaq-instrument-list.csv"
@@ -76,10 +92,22 @@ In this example I just select a few columns and keep the top 50
                              :WIDTH 1000
                              :YSCALE {:type "log"}}))
 
+^{:kindly/hide-code true}
+(kind/md ["
+## Plotting data
+
+[hanami](https://github.com/jsa-aerial/hanami) makes use of the [VEGA LITE](https://vega.github.io/vega-lite/) specification for plotting charts
+
+It works seamlessly with `tc/dataset`. Look at how smooth this code is! I am:
+
+- Parsing a CSV with time series data
+- Adding 2 new columns `pct-change` and `highly-volatile`
+- Plotting a point chart where highly volatile data points are highlighted in a different colour
+"])
 
 (-> "data/instruments/1INCH-USD.csv"
     (tc/dataset {:key-fn (comp keyword to-kebab-case)})
-    (tc/head 100))
+    (tc/head 10))
 
 (-> "data/instruments/1INCH-USD.csv"
   (tc/dataset {:key-fn (comp keyword to-kebab-case)})
@@ -94,4 +122,20 @@ In this example I just select a few columns and keep the top 50
                                :WIDTH 1000
                                :COLOR {:field :highly-volatile}
                                }))
+
+^{:kindly/hide-code true}
+(kind/md ["
+## Closing remarks
+
+I initially thought this would be a how-to piece but it evolved into being a review piece.
+
+My only points of comparison are to use Snowflake + SQL to plot, slice & dice.
+
+Or a more widely adopted solution like Jupyter, Numpy & others.
+
+I find this stack to be oddly entising, it's just so simple and highly declarative, there's python interop, lazily evaluated
+collections may mean its a lot less code to write than if I were using Numpy. Time will only tell
+
+Stay tuned.
+"])
 
