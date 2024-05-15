@@ -9,6 +9,7 @@
             [aerial.hanami.templates :as ht]))
 
 
+^{:kindly/hide-code true}
 (kind/md ["
 # [Scicloj](https://scicloj.github.io/) explorations part 1 | NASDAQ & Cryptocurrency timeseries
 
@@ -47,20 +48,20 @@ easy to operate on.
 In this example I just select a few columns and keep the top 50
 "])
 
-(-> "data/nasdaq-instrument-list.csv"
-  (tc/dataset {:key-fn (comp keyword to-kebab-case)})
-  (tc/select-columns [:symbol :name])
-  (tc/head 50))
-
 (defn to-kebab-case [s]
   (-> s
-    (str/lower-case)
-    (str/replace #" " "-")))
+      (str/lower-case)
+      (str/replace #" " "-")))
 
 (-> "data/nasdaq-instrument-list.csv"
-  (tc/dataset {:key-fn (comp keyword to-kebab-case)})
-  (tc/order-by :volume)
-  (tc/head 10))
+    (tc/dataset {:key-fn (comp keyword to-kebab-case)})
+    (tc/select-columns [:symbol :name])
+    (tc/head 50))
+
+(-> "data/nasdaq-instrument-list.csv"
+    (tc/dataset {:key-fn (comp keyword to-kebab-case)})
+    (tc/order-by :volume)
+    (tc/head 10))
 
 (def nasdaq-instruments
   (-> "data/nasdaq-instrument-list.csv"
