@@ -1,6 +1,7 @@
 (ns cashcloj.core
     (:require [scicloj.clay.v2.api :as clay]
             [clojure.string :as str]
+            [cashcloj.utils :as util]
             [tablecloth.api :as tc]
             [tablecloth.column.api :as tcc]
             [scicloj.clay.v2.api :as clay]
@@ -53,13 +54,8 @@ I also added a function `to-kebab-case` which casts the datasets keys in `this-f
 [tablecloth documentation](https://scicloj.github.io/tablecloth/)
 "])
 
-(defn to-kebab-case [s]
-  (-> s
-      (str/lower-case)
-      (str/replace #" " "-")))
-
 (-> "data/nasdaq-instrument-list.csv"
-  (tc/dataset {:key-fn (comp keyword to-kebab-case)})
+  (tc/dataset {:key-fn (comp keyword util/to-kebab-case)})
   (tc/select-columns [:symbol :name])
   (tc/head 10))
 
@@ -69,7 +65,7 @@ Ordering is very easy too
 "])
 
 (-> "data/nasdaq-instrument-list.csv"
-  (tc/dataset {:key-fn (comp keyword to-kebab-case)})
+  (tc/dataset {:key-fn (comp keyword util/to-kebab-case)})
   (tc/order-by :volume)
   (tc/head 10))
 
@@ -80,7 +76,7 @@ I now know that I want to re-use `data/nasdaq-instrument-list.csv` so I'll extra
 
 (def nasdaq-instruments
   (-> "data/nasdaq-instrument-list.csv"
-      (tc/dataset {:key-fn (comp keyword to-kebab-case)})))
+      (tc/dataset {:key-fn (comp keyword util/to-kebab-case)})))
 
 (-> nasdaq-instruments
   (tc/group-by [:country])
@@ -106,11 +102,11 @@ It works seamlessly with `tc/dataset`. Look at how smooth this code is! I am:
 "])
 
 (-> "data/instruments/1INCH-USD.csv"
-    (tc/dataset {:key-fn (comp keyword to-kebab-case)})
+    (tc/dataset {:key-fn (comp keyword util/to-kebab-case)})
     (tc/head 10))
 
 (-> "data/instruments/1INCH-USD.csv"
-  (tc/dataset {:key-fn (comp keyword to-kebab-case)})
+  (tc/dataset {:key-fn (comp keyword util/to-kebab-case)})
   (tc/map-columns :pct-change [:open :close] (fn [open close] (-> close
                                                                   (- open)
                                                                    (* 100))))
