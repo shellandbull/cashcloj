@@ -11,9 +11,9 @@
 
 ^{:kindly/hide-code true}
 (kind/md ["
-# [Scicloj](https://scicloj.github.io/) explorations part 1 | NASDAQ & Cryptocurrency timeseries
+# NASDAQ & Cryptocurrency timeseries
 
-This is my first exploration in the world of data science using the Scicloj stack.
+This is my first exploration in the world of data science using the [Scicloj stack](https://scicloj.github.io/).
 I decided to give it a go due to it's [interactive programming](https://docs.cider.mx/cider/usage/interactive_programming.html) capacities.
 The concept was introduced to me during a [London Clojurians](https://londonclojurians.org/) talk [\"From data to insights: Clojure for data deep dive\"](https://www.youtube.com/watch?v=eUFf3-og_-Y).
 
@@ -71,7 +71,9 @@ Ordering is very easy too
 
 ^{:kindly/hide-code true}
 (kind/md ["
-I now know that I want to re-use `data/nasdaq-instrument-list.csv` so I'll extract it onto it's own expression via `def`
+I now know that I want to re-use `data/nasdaq-instrument-list.csv` so I'll extract it onto it's own expression via `def`.
+
+Visualising information is very easy too. Because the US holds the vast majority of entries, I am applying a logarithmic scale to keep the sizes of the bars consistent, albeit the values are pretty skewed towards a few entries.
 "])
 
 (def nasdaq-instruments
@@ -102,10 +104,6 @@ It works seamlessly with `tc/dataset`. Look at how smooth this code is! I am:
 "])
 
 (-> "data/instruments/1INCH-USD.csv"
-    (tc/dataset {:key-fn (comp keyword util/to-kebab-case)})
-    (tc/head 10))
-
-(-> "data/instruments/1INCH-USD.csv"
   (tc/dataset {:key-fn (comp keyword util/to-kebab-case)})
   (tc/map-columns :pct-change [:open :close] (fn [open close] (-> close
                                                                   (- open)
@@ -123,15 +121,13 @@ It works seamlessly with `tc/dataset`. Look at how smooth this code is! I am:
 (kind/md ["
 ## Closing remarks
 
-I initially thought this would be a how-to piece but it evolved into being a review piece.
+I initially thought this would be a how-to piece but it evolved into being more of a \"stack review\". My only points of comparison are to use Snowflake + SQL to plot, slice & dice. Or a more widely adopted solution like Jupyter, Numpy & others.
 
-My only points of comparison are to use Snowflake + SQL to plot, slice & dice.
-
-Or a more widely adopted solution like Jupyter, Numpy & others.
-
-I find this stack to be oddly entising, it's just so simple and highly declarative, there's python interop, lazily evaluated
+I find this stack to be oddly entising, it's just so simple and highly declarative, there's python interop and lazily evaluated
 collections may mean its a lot less code to write than if I were using Numpy. Time will only tell
 
-Stay tuned.
+It would be nice to see `tc/dataset` being able to take in an SQL connection and manage long running queries elegantly straight from the text editor.
+
+I'll be posting more in the coming days, stay tuned.
 "])
 

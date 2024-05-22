@@ -1,24 +1,33 @@
-(ns cashcloj.core
+(ns cashcloj.bitcoin
   (:require [scicloj.clay.v2.api :as clay]
-            [clojure.string :as str]
             [tablecloth.api :as tc]
-            [tablecloth.column.api :as tcc]
+            [java-time :as jt]
+            [cheshire.core :as json]
             [cashcloj.utils :as util]
-            [scicloj.clay.v2.api :as clay]
-            [scicloj.noj.v1.vis.hanami :as hanami]
             [tech.v3.dataset.math :as math]
-            [scicloj.kindly.v4.kind :as kind]
-            [aerial.hanami.templates :as ht]))
+            [scicloj.kindly.v4.kind :as kind]))
+
+(defn parse-json-timestamp [date-string]
+  (jt/offset-date-time (jt/formatter "yyyy-MM-dd'T'HH:mm:ssX") date-string))
 
 (def btc-usd
+  "BTC-USD timeseries data"
   (-> "data/instruments/BTC-USD.csv"
       (tc/dataset {:key-fn (comp keyword util/to-kebab-case)})
-      (tc/map-columns :pct-change [:open :close] (fn [open close] (-> close
-                                                                      (- open)
-                                                                      (/ open)
-                                                                      (* 100))))
-      (tc/map-columns :highly-volatile [:pct-change] #(if (or (tcc/> % 6.0) (tcc/< % -6.0) ) 1 0))))
+      (util/add-pct-change)
+      (util/add-highly-volatile)))
 
-(-> btc-usd
-  (tc/separate-column :date [:day :month :year] (fn [date] [(.getDayOfMonth date) (.getMonth date) (.getYear date)]))
-  (math/correlation-table) (get :highly-volatile))
+(def btc-sentiment
+  "A JSON file that is populated out of News API with the word bitcoin used as criteria"
+  (as-> "data/sentiments/btc.json" ds
+    (slurp ds)
+    (json/parse-string ds)
+    (tc/dataset ds {:key-fn (comp keyword util/to-kebab-case)})
+    (tc/select-columns ds [:title :publishedat])
+    (tc/map-columns ds
+      :date
+      (tc/column-names ds :publishedat)
+      parse-json-timestamp)
+  )
+)
+

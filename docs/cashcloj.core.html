@@ -76,18 +76,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
 <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-  <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#scicloj-explorations-part-1-nasdaq-cryptocurrency-timeseries" id="toc-scicloj-explorations-part-1-nasdaq-cryptocurrency-timeseries" class="nav-link active" data-scroll-target="#scicloj-explorations-part-1-nasdaq-cryptocurrency-timeseries">Scicloj explorations part 1 | NASDAQ &amp; Cryptocurrency timeseries</a>
-  <ul>
-  <li><a href="#reading-a-dataset" id="toc-reading-a-dataset" class="nav-link" data-scroll-target="#reading-a-dataset">Reading a dataset</a></li>
-  <li><a href="#plotting-data" id="toc-plotting-data" class="nav-link" data-scroll-target="#plotting-data">Plotting data</a></li>
-  <li><a href="#closing-remarks" id="toc-closing-remarks" class="nav-link" data-scroll-target="#closing-remarks">Closing remarks</a></li>
-  </ul></li>
-  </ul>
-</nav>
+  
 </div>
 <main class="content" id="quarto-document-content">
 
@@ -102,320 +91,52 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 <style>.clay-limit-image-width .clay-image {max-width: 100%}
 </style>
-<script src="cashcloj.core_files/md-default2.js" type="text/javascript"></script>
-<script src="cashcloj.core_files/md-default3.js" type="text/javascript"></script>
-<script src="cashcloj.core_files/vega4.js" type="text/javascript"></script>
-<script src="cashcloj.core_files/vega5.js" type="text/javascript"></script>
-<script src="cashcloj.core_files/vega6.js" type="text/javascript"></script>
+<script src="cashcloj.core_files/md-default0.js" type="text/javascript"></script>
+<script src="cashcloj.core_files/md-default1.js" type="text/javascript"></script>
 <div class="sourceClojure">
 <div class="sourceCode" id="cb1"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">ns</span> cashcloj.core</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    (<span class="at">:require</span> [scicloj.clay.v2.api <span class="at">:as</span> clay]</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  (<span class="at">:require</span> [scicloj.clay.v2.api <span class="at">:as</span> clay]</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>            [clojure.string <span class="at">:as</span> <span class="kw">str</span>]</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>            [cashcloj.utils <span class="at">:as</span> util]</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>            [tablecloth.api <span class="at">:as</span> tc]</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>            [tablecloth.column.api <span class="at">:as</span> tcc]</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>            [tablecloth.api <span class="at">:as</span> tc]</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>            [tablecloth.column.api <span class="at">:as</span> tcc]</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>            [cashcloj.utils <span class="at">:as</span> util]</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>            [scicloj.clay.v2.api <span class="at">:as</span> clay]</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>            [scicloj.noj.v1.vis.hanami <span class="at">:as</span> hanami]</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>            [scicloj.kindly.v4.kind <span class="at">:as</span> kind]</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>            [aerial.hanami.templates <span class="at">:as</span> ht]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>            [tech.v3.dataset.math <span class="at">:as</span> math]</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>            [scicloj.kindly.v4.kind <span class="at">:as</span> kind]</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>            [aerial.hanami.templates <span class="at">:as</span> ht]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="scicloj-explorations-part-1-nasdaq-cryptocurrency-timeseries" class="level1">
-<h1><a href="https://scicloj.github.io/">Scicloj</a> explorations part 1 | NASDAQ &amp; Cryptocurrency timeseries</h1>
-<p>This is my first exploration in the world of data science using the Scicloj stack. I decided to give it a go due to it’s <a href="https://docs.cider.mx/cider/usage/interactive_programming.html">interactive programming</a> capacities. The concept was introduced to me during a <a href="https://londonclojurians.org/">London Clojurians</a> talk <a href="https://www.youtube.com/watch?v=eUFf3-og_-Y">“From data to insights: Clojure for data deep dive”</a>.</p>
-<p>This HTML document was rendered using <a href="https://github.com/scicloj/clay">Clay</a>, which evaluated a <code>.clj</code> file that behaves like a notebook</p>
-<p><strong>What’s the stack?</strong></p>
-<ul>
-<li><a href="https://www.spacemacs.org/">Spacemacs</a> as my text editor. It comes with plugins for <a href="https://github.com/scicloj/clay">Clay</a> &amp; <a href="https://github.com/clojure-emacs/cider">Clojure via Cider</a></li>
-<li><a href="https://clojure.org/">Clojure</a> A dynamically typed lisp dialect that calls the JVM home</li>
-<li><a href="https://scicloj.github.io/tablecloth">Tablecloth</a> a <code>dataframe</code> like manipulation library. Similar to Pandas</li>
-<li><a href="https://github.com/scicloj/clay">Clay</a> for data visualizations in a dynamic fashion</li>
-</ul>
-<p><strong>What’ll be doing</strong></p>
-<p>I downloaded timeseries price data from all the instruments from <a href="https://www.nasdaq.com/">NASDAQ</a> and the top 250 cryptocurrencies from <a href="https://www.binance.com/">Binance</a>. In this post we’ll perform some simple operations on the dataset, but in the future I hope to publish some more sophisticated ML studies alongside some richer visualisations</p>
-<p>In this first exploration I will keep things extremely simple.</p>
-<p>We’ll visualise the data as a table, do some transformations and render some charts.</p>
-<p><strong>How I’m doing it</strong></p>
-<p>Spacemacs has packages for Clay &amp; Cider. I can evaluate the code on my editor as I go and either have it pop onto a buffer or even render it’s output as HTML.</p>
-<section id="reading-a-dataset" class="level2">
-<h2 class="anchored" data-anchor-id="reading-a-dataset">Reading a dataset</h2>
-<p>It’s really simple. Just invoke <code>tc/dataset</code> over a URL or filename and you’ll immediately get a primitive in which is very easy to operate on.</p>
-<p>In this example I just select a few columns and keep the top 10.</p>
-<p>I also added a function <code>to-kebab-case</code> which casts the datasets keys in <code>this-format</code></p>
-<p><a href="https://scicloj.github.io/tablecloth/">tablecloth documentation</a></p>
 <div class="sourceClojure">
-<div class="sourceCode" id="cb2"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> <span class="st">"data/nasdaq-instrument-list.csv"</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (tc/dataset {<span class="at">:key-fn</span> (<span class="kw">comp</span> <span class="kw">keyword</span> util/to-kebab-case)})</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  (tc/select-columns [<span class="at">:symbol</span> <span class="at">:name</span>])</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  (tc/head <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> btc-usd</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">-&gt;</span> <span class="st">"data/instruments/BTC-USD.csv"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    (tc/dataset {<span class="at">:key-fn</span> (<span class="kw">comp</span> <span class="kw">keyword</span> util/to-kebab-case)})</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    (util/add-pct-change)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    (util/add-highly-volatile)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="sourceClojure">
+<div class="sourceCode" id="cb3"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> btc-usd</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (tc/separate-column <span class="at">:date</span> [<span class="at">:day</span> <span class="at">:month</span> <span class="at">:year</span>] (<span class="kw">fn</span> [date] [(.getDayOfMonth date) (.getMonth date) (.getYear date)]))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  (math/correlation-table) (<span class="kw">get</span> <span class="at">:highly-volatile</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="printedClojure">
+<div class="sourceCode" id="cb4"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>[[<span class="at">:highly-volatile</span> <span class="fl">1.0</span>] [<span class="at">:volume</span> <span class="fl">0.42316347179312186</span>] [<span class="at">:pct-change</span> <span class="fl">0.1564811977950932</span>] [<span class="at">:high</span> <span class="fl">0.13421352127148156</span>] [<span class="at">:close</span> <span class="fl">0.1203641675668868</span>] [<span class="at">:adj-close</span> <span class="fl">0.1203641675668868</span>] [<span class="at">:year</span> <span class="fl">0.11169572016826253</span>] [<span class="at">:open</span> <span class="fl">0.11055815795644011</span>] [<span class="at">:low</span> <span class="fl">0.09117704753518348</span>] [<span class="at">:day</span> -<span class="fl">0.03798082508619887</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="sourceClojure">
+<div class="sourceCode" id="cb5"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> btc-usd</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    (tc/head <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="clay-dataset">
-<p>data/nasdaq-instrument-list.csv [10 2]:</p>
-<table class="table">
-<thead>
-<tr class="header">
-<th>:symbol</th>
-<th>:name</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>A</td>
-<td>Agilent Technologies Inc.&nbsp;Common Stock</td>
-</tr>
-<tr class="even">
-<td>AA</td>
-<td>Alcoa Corporation Common Stock</td>
-</tr>
-<tr class="odd">
-<td>AACG</td>
-<td>ATA Creativity Global American Depositary Shares</td>
-</tr>
-<tr class="even">
-<td>AACI</td>
-<td>Armada Acquisition Corp.&nbsp;I Common Stock</td>
-</tr>
-<tr class="odd">
-<td>AACIW</td>
-<td>Armada Acquisition Corp.&nbsp;I Warrant</td>
-</tr>
-<tr class="even">
-<td>AACT</td>
-<td>Ares Acquisition Corporation II Class A Ordinary Shares</td>
-</tr>
-<tr class="odd">
-<td>AADI</td>
-<td>Aadi Bioscience Inc.&nbsp;Common Stock</td>
-</tr>
-<tr class="even">
-<td>AAGR</td>
-<td>African Agriculture Holdings Inc.&nbsp;Common Stock</td>
-</tr>
-<tr class="odd">
-<td>AAGRW</td>
-<td>African Agriculture Holdings Inc.&nbsp;Warrant</td>
-</tr>
-<tr class="even">
-<td>AAL</td>
-<td>American Airlines Group Inc.&nbsp;Common Stock</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>Ordering is very easy too</p>
-<div class="sourceClojure">
-<div class="sourceCode" id="cb3"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> <span class="st">"data/nasdaq-instrument-list.csv"</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (tc/dataset {<span class="at">:key-fn</span> (<span class="kw">comp</span> <span class="kw">keyword</span> util/to-kebab-case)})</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  (tc/order-by <span class="at">:volume</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  (tc/head <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="clay-dataset">
-<p>data/nasdaq-instrument-list.csv [10 11]:</p>
+<p>data/instruments/BTC-USD.csv [10 9]:</p>
 <table class="table">
 <colgroup>
-<col style="width: 4%">
-<col style="width: 28%">
-<col style="width: 5%">
-<col style="width: 6%">
-<col style="width: 5%">
-<col style="width: 7%">
-<col style="width: 6%">
-<col style="width: 5%">
-<col style="width: 4%">
+<col style="width: 8%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
 <col style="width: 9%">
-<col style="width: 18%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>:symbol</th>
-<th>:name</th>
-<th>:last-sale</th>
-<th style="text-align: right;">:net-change</th>
-<th>:%-change</th>
-<th style="text-align: right;">:market-cap</th>
-<th>:country</th>
-<th style="text-align: right;">:ipo-year</th>
-<th style="text-align: right;">:volume</th>
-<th>:sector</th>
-<th>:industry</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>CNFRZ</td>
-<td>Conifer Holdings Inc.&nbsp;9.75% Senior Unsecured Notes due 2028</td>
-<td>$11.50</td>
-<td style="text-align: right;">0.0</td>
-<td>0.00%</td>
-<td style="text-align: right;">1.40563132E+08</td>
-<td>United States</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">1</td>
-<td></td>
-<td></td>
-</tr>
-<tr class="even">
-<td>CFFS</td>
-<td>CF Acquisition Corp.&nbsp;VII Class A Common Stock</td>
-<td>$10.84</td>
-<td style="text-align: right;">0.0</td>
-<td>0.00%</td>
-<td style="text-align: right;">0.00000000E+00</td>
-<td>United States</td>
-<td style="text-align: right;">2022</td>
-<td style="text-align: right;">1</td>
-<td>Finance</td>
-<td>Blank Checks</td>
-</tr>
-<tr class="odd">
-<td>PDYNW</td>
-<td>Palladyne AI Corp Warrants</td>
-<td>$0.0505</td>
-<td style="text-align: right;">0.0</td>
-<td>0.00%</td>
-<td style="text-align: right;">1.30795000E+06</td>
-<td>United States</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">1</td>
-<td>Industrials</td>
-<td>Industrial Machinery/Components</td>
-</tr>
-<tr class="even">
-<td>KACL</td>
-<td>Kairous Acquisition Corp.&nbsp;Limited Ordinary Shares</td>
-<td>$11.72</td>
-<td style="text-align: right;">0.0</td>
-<td>0.00%</td>
-<td style="text-align: right;">0.00000000E+00</td>
-<td>Malaysia</td>
-<td style="text-align: right;">2022</td>
-<td style="text-align: right;">1</td>
-<td>Finance</td>
-<td>Blank Checks</td>
-</tr>
-<tr class="odd">
-<td>AONCW</td>
-<td>American Oncology Network Inc.&nbsp;Warrant</td>
-<td>$0.265</td>
-<td style="text-align: right;">0.0</td>
-<td>0.00%</td>
-<td style="text-align: right;">9.46486300E+06</td>
-<td>United States</td>
-<td style="text-align: right;">2021</td>
-<td style="text-align: right;">1</td>
-<td>Health Care</td>
-<td>Medical/Nursing Services</td>
-</tr>
-<tr class="even">
-<td>BBLGW</td>
-<td>Bone Biologics Corp Warrants</td>
-<td>$23.79</td>
-<td style="text-align: right;">0.0</td>
-<td>0.00%</td>
-<td style="text-align: right;">1.27095220E+07</td>
-<td>United States</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">1</td>
-<td>Health Care</td>
-<td>Industrial Specialties</td>
-</tr>
-<tr class="odd">
-<td>PMGM</td>
-<td>Priveterra Acquisition Corp.&nbsp;II Class A Common Stock</td>
-<td>$11.09</td>
-<td style="text-align: right;">0.0</td>
-<td>0.00%</td>
-<td style="text-align: right;">0.00000000E+00</td>
-<td>United States</td>
-<td style="text-align: right;">2021</td>
-<td style="text-align: right;">1</td>
-<td>Finance</td>
-<td>Blank Checks</td>
-</tr>
-<tr class="even">
-<td>SVREW</td>
-<td>SaverOne 2014 Ltd.&nbsp;Warrant</td>
-<td>$0.099</td>
-<td style="text-align: right;">0.0</td>
-<td>0.00%</td>
-<td style="text-align: right;">6.88834400E+06</td>
-<td>Israel</td>
-<td style="text-align: right;">2022</td>
-<td style="text-align: right;">1</td>
-<td>Technology</td>
-<td>EDP Services</td>
-</tr>
-<tr class="odd">
-<td>NTRBW</td>
-<td>Nutriband Inc.&nbsp;Warrant</td>
-<td>$0.55</td>
-<td style="text-align: right;">0.0</td>
-<td>0.00%</td>
-<td style="text-align: right;">6.03342900E+06</td>
-<td>United States</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">1</td>
-<td>Health Care</td>
-<td>Industrial Specialties</td>
-</tr>
-<tr class="even">
-<td>CCZ</td>
-<td>Comcast Holdings ZONES</td>
-<td>$54.81</td>
-<td style="text-align: right;">0.0</td>
-<td>0.00%</td>
-<td style="text-align: right;">2.15053944E+11</td>
-<td>United States</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">1</td>
-<td>Telecommunications</td>
-<td>Cable &amp; Other Pay Television Services</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>I now know that I want to re-use <code>data/nasdaq-instrument-list.csv</code> so I’ll extract it onto it’s own expression via <code>def</code></p>
-<div class="sourceClojure">
-<div class="sourceCode" id="cb4"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> nasdaq-instruments</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">-&gt;</span> <span class="st">"data/nasdaq-instrument-list.csv"</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>      (tc/dataset {<span class="at">:key-fn</span> (<span class="kw">comp</span> <span class="kw">keyword</span> util/to-kebab-case)})))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="sourceClojure">
-<div class="sourceCode" id="cb5"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> nasdaq-instruments</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  (tc/group-by [<span class="at">:country</span>])</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  (tc/aggregate {<span class="at">:count</span> tc/row-count})</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  (hanami/plot ht/bar-chart {</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">:X</span> <span class="at">:country</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                             <span class="at">:Y</span> <span class="at">:count</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                             <span class="at">:XTYPE</span> <span class="at">:nominal</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                             <span class="at">:WIDTH</span> <span class="dv">1000</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                             <span class="at">:YSCALE</span> {<span class="at">:type</span> <span class="st">"log"</span>}}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"scale":{"type":"log"},"field":"count","type":"quantitative"},"x":{"field":"country","type":"nominal"}},"usermeta":{"embedOptions":{"renderer":"svg"}},"mark":{"type":"bar","tooltip":true},"width":1000,"background":"floralwhite","height":300,"data":{"url":"cashcloj.core_files\/0.csv","format":{"type":"csv"}}});</script></div>
-</section>
-<section id="plotting-data" class="level2">
-<h2 class="anchored" data-anchor-id="plotting-data">Plotting data</h2>
-<p><a href="https://github.com/jsa-aerial/hanami">hanami</a> makes use of the <a href="https://vega.github.io/vega-lite/">VEGA LITE</a> specification for plotting charts</p>
-<p>It works seamlessly with <code>tc/dataset</code>. Look at how smooth this code is! I am:</p>
-<ul>
-<li>Parsing a CSV with time series data</li>
-<li>Adding 2 new columns <code>pct-change</code> and <code>highly-volatile</code></li>
-<li>Plotting a point chart where highly volatile data points are highlighted in a different colour</li>
-</ul>
-<div class="sourceClojure">
-<div class="sourceCode" id="cb6"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> <span class="st">"data/instruments/1INCH-USD.csv"</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    (tc/dataset {<span class="at">:key-fn</span> (<span class="kw">comp</span> <span class="kw">keyword</span> util/to-kebab-case)})</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    (tc/head <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="clay-dataset">
-<p>data/instruments/1INCH-USD.csv [10 7]:</p>
-<table class="table">
-<colgroup>
-<col style="width: 14%">
-<col style="width: 14%">
-<col style="width: 14%">
-<col style="width: 14%">
-<col style="width: 14%">
-<col style="width: 14%">
+<col style="width: 9%">
 <col style="width: 13%">
 </colgroup>
 <thead>
@@ -427,130 +148,126 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: right;">:low</th>
 <th style="text-align: right;">:open</th>
 <th style="text-align: right;">:volume</th>
+<th style="text-align: right;">:pct-change</th>
+<th style="text-align: right;">:highly-volatile</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>2023-07-14</td>
-<td style="text-align: right;">0.33524400</td>
-<td style="text-align: right;">0.33524400</td>
-<td style="text-align: right;">0.35731199</td>
-<td style="text-align: right;">0.32619700</td>
-<td style="text-align: right;">0.34957400</td>
-<td style="text-align: right;">22820525</td>
+<td style="text-align: right;">30334.06835938</td>
+<td style="text-align: right;">30334.06835938</td>
+<td style="text-align: right;">31582.25390625</td>
+<td style="text-align: right;">29966.38671875</td>
+<td style="text-align: right;">31474.72070312</td>
+<td style="text-align: right;">20917902660</td>
+<td style="text-align: right;">-3.62402690</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
 <td>2023-07-15</td>
-<td style="text-align: right;">0.36894101</td>
-<td style="text-align: right;">0.36894101</td>
-<td style="text-align: right;">0.37873101</td>
-<td style="text-align: right;">0.33065999</td>
-<td style="text-align: right;">0.33529899</td>
-<td style="text-align: right;">79156563</td>
+<td style="text-align: right;">30295.80664062</td>
+<td style="text-align: right;">30295.80664062</td>
+<td style="text-align: right;">30407.78125000</td>
+<td style="text-align: right;">30263.46289062</td>
+<td style="text-align: right;">30331.78320312</td>
+<td style="text-align: right;">8011667756</td>
+<td style="text-align: right;">-0.11861011</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="odd">
 <td>2023-07-16</td>
-<td style="text-align: right;">0.43362901</td>
-<td style="text-align: right;">0.43362901</td>
-<td style="text-align: right;">0.44532201</td>
-<td style="text-align: right;">0.36456200</td>
-<td style="text-align: right;">0.36915800</td>
-<td style="text-align: right;">231842663</td>
+<td style="text-align: right;">30249.13281250</td>
+<td style="text-align: right;">30249.13281250</td>
+<td style="text-align: right;">30437.56054688</td>
+<td style="text-align: right;">30089.66992188</td>
+<td style="text-align: right;">30297.47265625</td>
+<td style="text-align: right;">8516564470</td>
+<td style="text-align: right;">-0.15955075</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
 <td>2023-07-17</td>
-<td style="text-align: right;">0.40429100</td>
-<td style="text-align: right;">0.40429100</td>
-<td style="text-align: right;">0.58109099</td>
-<td style="text-align: right;">0.39502901</td>
-<td style="text-align: right;">0.43365800</td>
-<td style="text-align: right;">776148354</td>
+<td style="text-align: right;">30145.88867188</td>
+<td style="text-align: right;">30145.88867188</td>
+<td style="text-align: right;">30336.40039062</td>
+<td style="text-align: right;">29685.78320312</td>
+<td style="text-align: right;">30249.62695312</td>
+<td style="text-align: right;">13240156074</td>
+<td style="text-align: right;">-0.34294070</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="odd">
 <td>2023-07-18</td>
-<td style="text-align: right;">0.35965601</td>
-<td style="text-align: right;">0.35965601</td>
-<td style="text-align: right;">0.40430599</td>
-<td style="text-align: right;">0.35475701</td>
-<td style="text-align: right;">0.40430599</td>
-<td style="text-align: right;">123548475</td>
+<td style="text-align: right;">29856.56250000</td>
+<td style="text-align: right;">29856.56250000</td>
+<td style="text-align: right;">30233.65625000</td>
+<td style="text-align: right;">29556.42773438</td>
+<td style="text-align: right;">30147.07031250</td>
+<td style="text-align: right;">13138897269</td>
+<td style="text-align: right;">-0.96363530</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
 <td>2023-07-19</td>
-<td style="text-align: right;">0.33714199</td>
-<td style="text-align: right;">0.33714199</td>
-<td style="text-align: right;">0.36555001</td>
-<td style="text-align: right;">0.33557901</td>
-<td style="text-align: right;">0.35963100</td>
-<td style="text-align: right;">100891521</td>
+<td style="text-align: right;">29913.92382812</td>
+<td style="text-align: right;">29913.92382812</td>
+<td style="text-align: right;">30184.18164062</td>
+<td style="text-align: right;">29794.26953125</td>
+<td style="text-align: right;">29862.04687500</td>
+<td style="text-align: right;">12128602812</td>
+<td style="text-align: right;">0.17372203</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="odd">
 <td>2023-07-20</td>
-<td style="text-align: right;">0.32879999</td>
-<td style="text-align: right;">0.32879999</td>
-<td style="text-align: right;">0.35777801</td>
-<td style="text-align: right;">0.32261801</td>
-<td style="text-align: right;">0.33715999</td>
-<td style="text-align: right;">101280510</td>
+<td style="text-align: right;">29792.01562500</td>
+<td style="text-align: right;">29792.01562500</td>
+<td style="text-align: right;">30195.53125000</td>
+<td style="text-align: right;">29638.09570312</td>
+<td style="text-align: right;">29915.25000000</td>
+<td style="text-align: right;">14655207121</td>
+<td style="text-align: right;">-0.41194499</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
 <td>2023-07-21</td>
-<td style="text-align: right;">0.33631900</td>
-<td style="text-align: right;">0.33631900</td>
-<td style="text-align: right;">0.34398800</td>
-<td style="text-align: right;">0.32493699</td>
-<td style="text-align: right;">0.32882401</td>
-<td style="text-align: right;">65835792</td>
+<td style="text-align: right;">29908.74414062</td>
+<td style="text-align: right;">29908.74414062</td>
+<td style="text-align: right;">30045.99804688</td>
+<td style="text-align: right;">29733.85156250</td>
+<td style="text-align: right;">29805.11132812</td>
+<td style="text-align: right;">10972789818</td>
+<td style="text-align: right;">0.34770148</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="odd">
 <td>2023-07-22</td>
-<td style="text-align: right;">0.32811299</td>
-<td style="text-align: right;">0.32811299</td>
-<td style="text-align: right;">0.33769199</td>
-<td style="text-align: right;">0.32699901</td>
-<td style="text-align: right;">0.33629000</td>
-<td style="text-align: right;">32974711</td>
+<td style="text-align: right;">29771.80273438</td>
+<td style="text-align: right;">29771.80273438</td>
+<td style="text-align: right;">29991.61523438</td>
+<td style="text-align: right;">29664.12109375</td>
+<td style="text-align: right;">29908.69726562</td>
+<td style="text-align: right;">7873300598</td>
+<td style="text-align: right;">-0.45770810</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
 <td>2023-07-23</td>
-<td style="text-align: right;">0.32757801</td>
-<td style="text-align: right;">0.32757801</td>
-<td style="text-align: right;">0.33134499</td>
-<td style="text-align: right;">0.32585999</td>
-<td style="text-align: right;">0.32810900</td>
-<td style="text-align: right;">33972196</td>
+<td style="text-align: right;">30084.53906250</td>
+<td style="text-align: right;">30084.53906250</td>
+<td style="text-align: right;">30330.64062500</td>
+<td style="text-align: right;">29741.52734375</td>
+<td style="text-align: right;">29790.11132812</td>
+<td style="text-align: right;">9220145050</td>
+<td style="text-align: right;">0.98834050</td>
+<td style="text-align: right;">0</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="sourceClojure">
-<div class="sourceCode" id="cb7"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> <span class="st">"data/instruments/1INCH-USD.csv"</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  (tc/dataset {<span class="at">:key-fn</span> (<span class="kw">comp</span> <span class="kw">keyword</span> util/to-kebab-case)})</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  (tc/map-columns <span class="at">:pct-change</span> [<span class="at">:open</span> <span class="at">:close</span>] (<span class="kw">fn</span> [open close] (<span class="kw">-&gt;</span> close</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                                                                  (<span class="kw">-</span> open)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                                                                   (<span class="kw">*</span> <span class="dv">100</span>))))</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  (tc/map-columns <span class="at">:highly-volatile</span> [<span class="at">:pct-change</span>] #(<span class="kw">or</span> (tcc/&gt; <span class="va">%</span> <span class="fl">6.0</span>) (tcc/&lt; <span class="va">%</span> -<span class="fl">6.0</span>)))</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  (hanami/plot ht/point-chart {</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                               <span class="at">:X</span>     <span class="at">:date</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>                               <span class="at">:Y</span>     <span class="at">:pct-change</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                               <span class="at">:XTYPE</span> <span class="at">:temporal</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>                               <span class="at">:WIDTH</span> <span class="dv">1000</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>                               <span class="at">:COLOR</span> {<span class="at">:field</span> <span class="at">:highly-volatile</span>}</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>                               }))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"field":"pct-change","type":"quantitative"},"color":{"field":"highly-volatile"},"x":{"field":"date","type":"temporal"}},"usermeta":{"embedOptions":{"renderer":"svg"}},"mark":{"type":"circle","tooltip":true},"width":1000,"background":"floralwhite","height":300,"data":{"url":"cashcloj.core_files\/1.csv","format":{"type":"csv"}}});</script></div>
-</section>
-<section id="closing-remarks" class="level2">
-<h2 class="anchored" data-anchor-id="closing-remarks">Closing remarks</h2>
-<p>I initially thought this would be a how-to piece but it evolved into being a review piece.</p>
-<p>My only points of comparison are to use Snowflake + SQL to plot, slice &amp; dice.</p>
-<p>Or a more widely adopted solution like Jupyter, Numpy &amp; others.</p>
-<p>I find this stack to be oddly entising, it’s just so simple and highly declarative, there’s python interop, lazily evaluated collections may mean its a lot less code to write than if I were using Numpy. Time will only tell</p>
-<p>Stay tuned.</p>
 <div style="background-color:grey;height:2px;width:100%;"></div>
-<div><pre><small><small>source: src/cashcloj/core.clj</small></small></pre></div>
-</section>
-</section>
+<div><pre><small><small>source: src/cashcloj/bitcoin.clj</small></small></pre></div>
 
 </main>
 <!-- /main column -->
