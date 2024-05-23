@@ -2,7 +2,7 @@
   (:require [scicloj.clay.v2.api :as clay]
             [tablecloth.api :as tc]
             [java-time :as jt]
-            [cheshire.core :as json]
+            [charred.api :as charred]
             [cashcloj.utils :as util]
             [tech.v3.dataset.math :as math]
             [scicloj.kindly.v4.kind :as kind]))
@@ -19,15 +19,19 @@
 
 (def btc-sentiment
   "A JSON file that is populated out of News API with the word bitcoin used as criteria"
-  (as-> "data/sentiments/btc.json" ds
-    (slurp ds)
-    (json/parse-string ds)
-    (tc/dataset ds {:key-fn (comp keyword util/to-kebab-case)})
-    (tc/select-columns ds [:title :publishedat])
-    (tc/map-columns ds
-      :date
-      (tc/column-names ds :publishedat)
-      parse-json-timestamp)
-  )
+  (-> "data/sentiments/btc.json"
+      (slurp)
+      (charred/read-json)
+      (get "articles")
+      (tc/dataset {:key-fn (comp keyword util/to-kebab-case)})
+      (tc/convert-types :publishedat [:string jt/zoned-date-time])
+      (tc/info))
 )
 
+(def sample-date "2024-05-17T17:50:07Z")
+
+(-> sample-date
+    (jt/zoned-date-time))
+
+(def timeseries-with-sentiment
+  )
