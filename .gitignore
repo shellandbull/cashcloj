@@ -1,5 +1,5 @@
-.clj-kondo
-.lsp
+.clj-kondo/
+.lsp/
 /target
 /classes
 /checkouts
