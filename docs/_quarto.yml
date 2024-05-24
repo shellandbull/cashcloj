@@ -4,4 +4,4 @@ format:
 project: {type: book}
 book:
   title: Cashcloj | Data Science in Clojure
-  chapters: [index.qmd, bin.qmd, cashcloj.core.qmd]
+  chapters: [index.qmd, cashcloj.core.qmd]
