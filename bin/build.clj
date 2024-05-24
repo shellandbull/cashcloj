@@ -15,7 +15,7 @@
      :book             {:title "Cashcloj | Data Science in Clojure"}
      :base-source-path "src"
      :base-target-path "docs"
-     :subdirs-to-sync  ["src" "data"]
+     :subdirs-to-sync  ["src" "data/book"]
      :source-path      ["index.clj"
                    "cashcloj/core.clj"]}))
 
