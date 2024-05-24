@@ -4,69 +4,59 @@
     "href": "index.html",
     "title": "Cashcloj | Data Science in Clojure",
     "section": "",
-    "text": "1 Cashcloj | Data Science in Clojure",
+    "text": "1 Welcome to Cashcloj,\nMy name is Mario Gintili. You can find me on Github @shellandbull.\nData Science, Data Engineering & Machine Learning have always been a personal interest of mine. During my uni years I was an economics major and I had a deep passion for decision modelling alla Moneyball. My inspiration came from films of the sort\nI’m originally a Rubyist and I was introduced to Clojure long time ago. This year(2024, in case you are reading this in the future) I saw a talk @ London Clojurians by the Scicloj which showcased a new stack for DS/ML. The stack includes:\nThis site is a documents my journey learning the ML/DS chops\nJoin me on my silly explorations",
     "crumbs": [
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Cashcloj | Data Science in Clojure</span>"
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Welcome to Cashcloj,</span>"
     ]
   },
   {
-    "objectID": "bin.html",
-    "href": "bin.html",
-    "title": "2  Welcome to Cashcloj,",
-    "section": "",
-    "text": "2.1 Goals",
+    "objectID": "index.html#goals",
+    "href": "index.html#goals",
+    "title": "Cashcloj | Data Science in Clojure",
+    "section": "1.1 Goals",
+    "text": "1.1 Goals\n\nLearn to use emacs in evil mode\nLearn data engineering. The usual stuff like feature engineering, scrubbing data, joining datasets, formulating the right questions\nLearn Clojure. My background’s in OOP dynamically typed languages, this is my first lisp\nLearn Scicloj\n\n\nsource: src/index.clj",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Welcome to Cashcloj,</span>"
-    ]
-  },
-  {
-    "objectID": "bin.html#goals",
-    "href": "bin.html#goals",
-    "title": "2  Welcome to Cashcloj,",
-    "section": "",
-    "text": "Learn to use emacs in evil mode\nLearn data engineering. The usual stuff like feature engineering, scrubbing data, joining datasets, formulating the right questions\nLearn Clojure. My background’s in OOP dynamically typed languages, this is my first lisp\nLearn Scicloj\n\n\nsource: src/index.clj",
-    "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Welcome to Cashcloj,</span>"
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Welcome to Cashcloj,</span>"
     ]
   },
   {
     "objectID": "cashcloj.core.html",
     "href": "cashcloj.core.html",
-    "title": "3  NASDAQ & Cryptocurrency timeseries",
+    "title": "2  NASDAQ & Cryptocurrency timeseries",
     "section": "",
-    "text": "3.1 Reading a dataset\nIt’s really simple. Just invoke tc/dataset over a URL or filename and you’ll immediately get a primitive in which is very easy to operate on.\nIn this example I just select a few columns and keep the top 10.\nI also added a function to-kebab-case which casts the datasets keys in this-format\ntablecloth documentation\nOrdering is very easy too\nI now know that I want to re-use data/nasdaq-instrument-list.csv so I’ll extract it onto it’s own expression via def.\nVisualising information is very easy too. Because the US holds the vast majority of entries, I am applying a logarithmic scale to keep the sizes of the bars consistent, albeit the values are pretty skewed towards a few entries.",
+    "text": "2.1 Reading a dataset\nIt’s really simple. Just invoke tc/dataset over a URL or filename and you’ll immediately get a primitive in which is very easy to operate on.\nIn this example I just select a few columns and keep the top 10.\nI also added a function to-kebab-case which casts the datasets keys in this-format\ntablecloth documentation\nOrdering is very easy too\nI now know that I want to re-use data/nasdaq-instrument-list.csv so I’ll extract it onto it’s own expression via def.\nVisualising information is very easy too. Because the US holds the vast majority of entries, I am applying a logarithmic scale to keep the sizes of the bars consistent, albeit the values are pretty skewed towards a few entries.",
     "crumbs": [
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>NASDAQ & Cryptocurrency timeseries</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>NASDAQ & Cryptocurrency timeseries</span>"
     ]
   },
   {
     "objectID": "cashcloj.core.html#reading-a-dataset",
     "href": "cashcloj.core.html#reading-a-dataset",
-    "title": "3  NASDAQ & Cryptocurrency timeseries",
+    "title": "2  NASDAQ & Cryptocurrency timeseries",
     "section": "",
     "text": "(-&gt; \"data/nasdaq-instrument-list.csv\"\n  (tc/dataset {:key-fn (comp keyword util/to-kebab-case)})\n  (tc/select-columns [:symbol :name])\n  (tc/head 10))\n\n\ndata/nasdaq-instrument-list.csv [10 2]:\n\n\n\n:symbol\n:name\n\n\n\n\nA\nAgilent Technologies Inc. Common Stock\n\n\nAA\nAlcoa Corporation Common Stock\n\n\nAACG\nATA Creativity Global American Depositary Shares\n\n\nAACI\nArmada Acquisition Corp. I Common Stock\n\n\nAACIW\nArmada Acquisition Corp. I Warrant\n\n\nAACT\nAres Acquisition Corporation II Class A Ordinary Shares\n\n\nAADI\nAadi Bioscience Inc. Common Stock\n\n\nAAGR\nAfrican Agriculture Holdings Inc. Common Stock\n\n\nAAGRW\nAfrican Agriculture Holdings Inc. Warrant\n\n\nAAL\nAmerican Airlines Group Inc. Common Stock\n\n\n\n\n\n\n(-&gt; \"data/nasdaq-instrument-list.csv\"\n  (tc/dataset {:key-fn (comp keyword util/to-kebab-case)})\n  (tc/order-by :volume)\n  (tc/head 10))\n\n\ndata/nasdaq-instrument-list.csv [10 11]:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n:symbol\n:name\n:last-sale\n:net-change\n:%-change\n:market-cap\n:country\n:ipo-year\n:volume\n:sector\n:industry\n\n\n\n\nCNFRZ\nConifer Holdings Inc. 9.75% Senior Unsecured Notes due 2028\n$11.50\n0.0\n0.00%\n1.40563132E+08\nUnited States\n\n1\n\n\n\n\nCFFS\nCF Acquisition Corp. VII Class A Common Stock\n$10.84\n0.0\n0.00%\n0.00000000E+00\nUnited States\n2022\n1\nFinance\nBlank Checks\n\n\nPDYNW\nPalladyne AI Corp Warrants\n$0.0505\n0.0\n0.00%\n1.30795000E+06\nUnited States\n\n1\nIndustrials\nIndustrial Machinery/Components\n\n\nKACL\nKairous Acquisition Corp. Limited Ordinary Shares\n$11.72\n0.0\n0.00%\n0.00000000E+00\nMalaysia\n2022\n1\nFinance\nBlank Checks\n\n\nAONCW\nAmerican Oncology Network Inc. Warrant\n$0.265\n0.0\n0.00%\n9.46486300E+06\nUnited States\n2021\n1\nHealth Care\nMedical/Nursing Services\n\n\nBBLGW\nBone Biologics Corp Warrants\n$23.79\n0.0\n0.00%\n1.27095220E+07\nUnited States\n\n1\nHealth Care\nIndustrial Specialties\n\n\nPMGM\nPriveterra Acquisition Corp. II Class A Common Stock\n$11.09\n0.0\n0.00%\n0.00000000E+00\nUnited States\n2021\n1\nFinance\nBlank Checks\n\n\nSVREW\nSaverOne 2014 Ltd. Warrant\n$0.099\n0.0\n0.00%\n6.88834400E+06\nIsrael\n2022\n1\nTechnology\nEDP Services\n\n\nNTRBW\nNutriband Inc. Warrant\n$0.55\n0.0\n0.00%\n6.03342900E+06\nUnited States\n\n1\nHealth Care\nIndustrial Specialties\n\n\nCCZ\nComcast Holdings ZONES\n$54.81\n0.0\n0.00%\n2.15053944E+11\nUnited States\n\n1\nTelecommunications\nCable & Other Pay Television Services\n\n\n\n\n\n\n\n(def nasdaq-instruments\n  (-&gt; \"data/nasdaq-instrument-list.csv\"\n      (tc/dataset {:key-fn (comp keyword util/to-kebab-case)})))\n\n\n(-&gt; nasdaq-instruments\n  (tc/group-by [:country])\n  (tc/aggregate {:count tc/row-count})\n  (hanami/plot ht/bar-chart {\n                             :X :country\n                             :Y :count\n                             :XTYPE :nominal\n                             :WIDTH 1000\n                             :YSCALE {:type \"log\"}}))",
     "crumbs": [
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>NASDAQ & Cryptocurrency timeseries</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>NASDAQ & Cryptocurrency timeseries</span>"
     ]
   },
   {
     "objectID": "cashcloj.core.html#plotting-data",
     "href": "cashcloj.core.html#plotting-data",
-    "title": "3  NASDAQ & Cryptocurrency timeseries",
-    "section": "3.2 Plotting data",
-    "text": "3.2 Plotting data\nhanami makes use of the VEGA LITE specification for plotting charts\nIt works seamlessly with tc/dataset. Look at how smooth this code is! I am:\n\nParsing a CSV with time series data\nAdding 2 new columns pct-change and highly-volatile\nPlotting a point chart where highly volatile data points are highlighted in a different colour\n\n\n(-&gt; \"data/instruments/1INCH-USD.csv\"\n  (tc/dataset {:key-fn (comp keyword util/to-kebab-case)})\n  (tc/map-columns :pct-change [:open :close] (fn [open close] (-&gt; close\n                                                                  (- open)\n                                                                   (* 100))))\n  (tc/map-columns :highly-volatile [:pct-change] #(or (tcc/&gt; % 6.0) (tcc/&lt; % -6.0)))\n  (hanami/plot ht/point-chart {\n                               :X     :date\n                               :Y     :pct-change\n                               :XTYPE :temporal\n                               :WIDTH 1000\n                               :COLOR {:field :highly-volatile}\n                               }))",
+    "title": "2  NASDAQ & Cryptocurrency timeseries",
+    "section": "2.2 Plotting data",
+    "text": "2.2 Plotting data\nhanami makes use of the VEGA LITE specification for plotting charts\nIt works seamlessly with tc/dataset. Look at how smooth this code is! I am:\n\nParsing a CSV with time series data\nAdding 2 new columns pct-change and highly-volatile\nPlotting a point chart where highly volatile data points are highlighted in a different colour\n\n\n(-&gt; \"data/instruments/1INCH-USD.csv\"\n  (tc/dataset {:key-fn (comp keyword util/to-kebab-case)})\n  (tc/map-columns :pct-change [:open :close] (fn [open close] (-&gt; close\n                                                                  (- open)\n                                                                   (* 100))))\n  (tc/map-columns :highly-volatile [:pct-change] #(or (tcc/&gt; % 6.0) (tcc/&lt; % -6.0)))\n  (hanami/plot ht/point-chart {\n                               :X     :date\n                               :Y     :pct-change\n                               :XTYPE :temporal\n                               :WIDTH 1000\n                               :COLOR {:field :highly-volatile}\n                               }))",
     "crumbs": [
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>NASDAQ & Cryptocurrency timeseries</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>NASDAQ & Cryptocurrency timeseries</span>"
     ]
   },
   {
     "objectID": "cashcloj.core.html#closing-remarks",
     "href": "cashcloj.core.html#closing-remarks",
-    "title": "3  NASDAQ & Cryptocurrency timeseries",
-    "section": "3.3 Closing remarks",
-    "text": "3.3 Closing remarks\nI initially thought this would be a how-to piece but it evolved into being more of a “stack review”. My only points of comparison are to use Snowflake + SQL to plot, slice & dice. Or a more widely adopted solution like Jupyter, Numpy & others.\nI find this stack to be oddly entising, it’s just so simple and highly declarative, there’s python interop and lazily evaluated collections may mean its a lot less code to write than if I were using Numpy. Time will only tell\nIt would be nice to see tc/dataset being able to take in an SQL connection and manage long running queries elegantly straight from the text editor.\nI’ll be posting more in the coming days, stay tuned.\n\nsource: src/cashcloj/core.clj",
+    "title": "2  NASDAQ & Cryptocurrency timeseries",
+    "section": "2.3 Closing remarks",
+    "text": "2.3 Closing remarks\nI initially thought this would be a how-to piece but it evolved into being more of a “stack review”. My only points of comparison are to use Snowflake + SQL to plot, slice & dice. Or a more widely adopted solution like Jupyter, Numpy & others.\nI find this stack to be oddly entising, it’s just so simple and highly declarative, there’s python interop and lazily evaluated collections may mean its a lot less code to write than if I were using Numpy. Time will only tell\nIt would be nice to see tc/dataset being able to take in an SQL connection and manage long running queries elegantly straight from the text editor.\nI’ll be posting more in the coming days, stay tuned.\n\nsource: src/cashcloj/core.clj",
     "crumbs": [
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>NASDAQ & Cryptocurrency timeseries</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>NASDAQ & Cryptocurrency timeseries</span>"
     ]
   }
 ]
