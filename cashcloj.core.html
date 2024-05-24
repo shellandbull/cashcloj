@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.554">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Cashcloj | Data Science in Clojure - 3&nbsp; NASDAQ &amp; Cryptocurrency timeseries</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./bin.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link rel="icon" href="data:,">
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./cashcloj.core.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">NASDAQ &amp; Cryptocurrency timeseries</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Cashcloj | Data Science in Clojure</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Cashcloj | Data Science in Clojure</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./bin.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Welcome to Cashcloj,</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cashcloj.core.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">NASDAQ &amp; Cryptocurrency timeseries</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#reading-a-dataset" id="toc-reading-a-dataset" class="nav-link active" data-scroll-target="#reading-a-dataset"><span class="header-section-number">3.1</span> Reading a dataset</a></li>
+  <li><a href="#plotting-data" id="toc-plotting-data" class="nav-link" data-scroll-target="#plotting-data"><span class="header-section-number">3.2</span> Plotting data</a></li>
+  <li><a href="#closing-remarks" id="toc-closing-remarks" class="nav-link" data-scroll-target="#closing-remarks"><span class="header-section-number">3.3</span> Closing remarks</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">NASDAQ &amp; Cryptocurrency timeseries</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<style></style>
+<style>.printedClojure .sourceCode {
+  background-color: transparent;
+  border-style: none;
+}
+</style>
+<style>.clay-limit-image-width .clay-image {max-width: 100%}
+</style>
+<script src="cashcloj.core_files/md-default2.js" type="text/javascript"></script>
+<script src="cashcloj.core_files/md-default3.js" type="text/javascript"></script>
+<script src="cashcloj.core_files/vega4.js" type="text/javascript"></script>
+<script src="cashcloj.core_files/vega5.js" type="text/javascript"></script>
+<script src="cashcloj.core_files/vega6.js" type="text/javascript"></script>
+<div class="sourceClojure">
+<div class="sourceCode" id="cb1"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">ns</span> cashcloj.core</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    (<span class="at">:require</span> [scicloj.clay.v2.api <span class="at">:as</span> clay]</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>            [clojure.string <span class="at">:as</span> <span class="kw">str</span>]</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>            [cashcloj.utils <span class="at">:as</span> util]</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>            [tablecloth.api <span class="at">:as</span> tc]</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>            [tablecloth.column.api <span class="at">:as</span> tcc]</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>            [scicloj.clay.v2.api <span class="at">:as</span> clay]</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>            [scicloj.noj.v1.vis.hanami <span class="at">:as</span> hanami]</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>            [scicloj.kindly.v4.kind <span class="at">:as</span> kind]</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>            [aerial.hanami.templates <span class="at">:as</span> ht]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This is my first exploration in the world of data science using the <a href="https://scicloj.github.io/">Scicloj stack</a>. I decided to give it a go due to it’s <a href="https://docs.cider.mx/cider/usage/interactive_programming.html">interactive programming</a> capacities. The concept was introduced to me during a <a href="https://londonclojurians.org/">London Clojurians</a> talk <a href="https://www.youtube.com/watch?v=eUFf3-og_-Y">“From data to insights: Clojure for data deep dive”</a>.</p>
+<p>This HTML document was rendered using <a href="https://github.com/scicloj/clay">Clay</a>, which evaluated a <code>.clj</code> file that behaves like a notebook</p>
+<p><strong>What’s the stack?</strong></p>
+<ul>
+<li><a href="https://www.spacemacs.org/">Spacemacs</a> as my text editor. It comes with plugins for <a href="https://github.com/scicloj/clay">Clay</a> &amp; <a href="https://github.com/clojure-emacs/cider">Clojure via Cider</a></li>
+<li><a href="https://clojure.org/">Clojure</a> A dynamically typed lisp dialect that calls the JVM home</li>
+<li><a href="https://scicloj.github.io/tablecloth">Tablecloth</a> a <code>dataframe</code> like manipulation library. Similar to Pandas</li>
+<li><a href="https://github.com/scicloj/clay">Clay</a> for data visualizations in a dynamic fashion</li>
+</ul>
+<p><strong>What’ll be doing</strong></p>
+<p>I downloaded timeseries price data from all the instruments from <a href="https://www.nasdaq.com/">NASDAQ</a> and the top 250 cryptocurrencies from <a href="https://www.binance.com/">Binance</a>. In this post we’ll perform some simple operations on the dataset, but in the future I hope to publish some more sophisticated ML studies alongside some richer visualisations</p>
+<p>In this first exploration I will keep things extremely simple.</p>
+<p>We’ll visualise the data as a table, do some transformations and render some charts.</p>
+<p><strong>How I’m doing it</strong></p>
+<p>Spacemacs has packages for Clay &amp; Cider. I can evaluate the code on my editor as I go and either have it pop onto a buffer or even render it’s output as HTML.</p>
+<section id="reading-a-dataset" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="reading-a-dataset"><span class="header-section-number">3.1</span> Reading a dataset</h2>
+<p>It’s really simple. Just invoke <code>tc/dataset</code> over a URL or filename and you’ll immediately get a primitive in which is very easy to operate on.</p>
+<p>In this example I just select a few columns and keep the top 10.</p>
+<p>I also added a function <code>to-kebab-case</code> which casts the datasets keys in <code>this-format</code></p>
+<p><a href="https://scicloj.github.io/tablecloth/">tablecloth documentation</a></p>
+<div class="sourceClojure">
+<div class="sourceCode" id="cb2"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> <span class="st">"data/nasdaq-instrument-list.csv"</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (tc/dataset {<span class="at">:key-fn</span> (<span class="kw">comp</span> <span class="kw">keyword</span> util/to-kebab-case)})</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  (tc/select-columns [<span class="at">:symbol</span> <span class="at">:name</span>])</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  (tc/head <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="clay-dataset">
+<p>data/nasdaq-instrument-list.csv [10 2]:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>:symbol</th>
+<th>:name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A</td>
+<td>Agilent Technologies Inc.&nbsp;Common Stock</td>
+</tr>
+<tr class="even">
+<td>AA</td>
+<td>Alcoa Corporation Common Stock</td>
+</tr>
+<tr class="odd">
+<td>AACG</td>
+<td>ATA Creativity Global American Depositary Shares</td>
+</tr>
+<tr class="even">
+<td>AACI</td>
+<td>Armada Acquisition Corp.&nbsp;I Common Stock</td>
+</tr>
+<tr class="odd">
+<td>AACIW</td>
+<td>Armada Acquisition Corp.&nbsp;I Warrant</td>
+</tr>
+<tr class="even">
+<td>AACT</td>
+<td>Ares Acquisition Corporation II Class A Ordinary Shares</td>
+</tr>
+<tr class="odd">
+<td>AADI</td>
+<td>Aadi Bioscience Inc.&nbsp;Common Stock</td>
+</tr>
+<tr class="even">
+<td>AAGR</td>
+<td>African Agriculture Holdings Inc.&nbsp;Common Stock</td>
+</tr>
+<tr class="odd">
+<td>AAGRW</td>
+<td>African Agriculture Holdings Inc.&nbsp;Warrant</td>
+</tr>
+<tr class="even">
+<td>AAL</td>
+<td>American Airlines Group Inc.&nbsp;Common Stock</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Ordering is very easy too</p>
+<div class="sourceClojure">
+<div class="sourceCode" id="cb3"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> <span class="st">"data/nasdaq-instrument-list.csv"</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (tc/dataset {<span class="at">:key-fn</span> (<span class="kw">comp</span> <span class="kw">keyword</span> util/to-kebab-case)})</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  (tc/order-by <span class="at">:volume</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  (tc/head <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="clay-dataset">
+<p>data/nasdaq-instrument-list.csv [10 11]:</p>
+<table class="table">
+<colgroup>
+<col style="width: 4%">
+<col style="width: 28%">
+<col style="width: 5%">
+<col style="width: 6%">
+<col style="width: 5%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 5%">
+<col style="width: 4%">
+<col style="width: 9%">
+<col style="width: 18%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>:symbol</th>
+<th>:name</th>
+<th>:last-sale</th>
+<th style="text-align: right;">:net-change</th>
+<th>:%-change</th>
+<th style="text-align: right;">:market-cap</th>
+<th>:country</th>
+<th style="text-align: right;">:ipo-year</th>
+<th style="text-align: right;">:volume</th>
+<th>:sector</th>
+<th>:industry</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>CNFRZ</td>
+<td>Conifer Holdings Inc.&nbsp;9.75% Senior Unsecured Notes due 2028</td>
+<td>$11.50</td>
+<td style="text-align: right;">0.0</td>
+<td>0.00%</td>
+<td style="text-align: right;">1.40563132E+08</td>
+<td>United States</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">1</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>CFFS</td>
+<td>CF Acquisition Corp.&nbsp;VII Class A Common Stock</td>
+<td>$10.84</td>
+<td style="text-align: right;">0.0</td>
+<td>0.00%</td>
+<td style="text-align: right;">0.00000000E+00</td>
+<td>United States</td>
+<td style="text-align: right;">2022</td>
+<td style="text-align: right;">1</td>
+<td>Finance</td>
+<td>Blank Checks</td>
+</tr>
+<tr class="odd">
+<td>PDYNW</td>
+<td>Palladyne AI Corp Warrants</td>
+<td>$0.0505</td>
+<td style="text-align: right;">0.0</td>
+<td>0.00%</td>
+<td style="text-align: right;">1.30795000E+06</td>
+<td>United States</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">1</td>
+<td>Industrials</td>
+<td>Industrial Machinery/Components</td>
+</tr>
+<tr class="even">
+<td>KACL</td>
+<td>Kairous Acquisition Corp.&nbsp;Limited Ordinary Shares</td>
+<td>$11.72</td>
+<td style="text-align: right;">0.0</td>
+<td>0.00%</td>
+<td style="text-align: right;">0.00000000E+00</td>
+<td>Malaysia</td>
+<td style="text-align: right;">2022</td>
+<td style="text-align: right;">1</td>
+<td>Finance</td>
+<td>Blank Checks</td>
+</tr>
+<tr class="odd">
+<td>AONCW</td>
+<td>American Oncology Network Inc.&nbsp;Warrant</td>
+<td>$0.265</td>
+<td style="text-align: right;">0.0</td>
+<td>0.00%</td>
+<td style="text-align: right;">9.46486300E+06</td>
+<td>United States</td>
+<td style="text-align: right;">2021</td>
+<td style="text-align: right;">1</td>
+<td>Health Care</td>
+<td>Medical/Nursing Services</td>
+</tr>
+<tr class="even">
+<td>BBLGW</td>
+<td>Bone Biologics Corp Warrants</td>
+<td>$23.79</td>
+<td style="text-align: right;">0.0</td>
+<td>0.00%</td>
+<td style="text-align: right;">1.27095220E+07</td>
+<td>United States</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">1</td>
+<td>Health Care</td>
+<td>Industrial Specialties</td>
+</tr>
+<tr class="odd">
+<td>PMGM</td>
+<td>Priveterra Acquisition Corp.&nbsp;II Class A Common Stock</td>
+<td>$11.09</td>
+<td style="text-align: right;">0.0</td>
+<td>0.00%</td>
+<td style="text-align: right;">0.00000000E+00</td>
+<td>United States</td>
+<td style="text-align: right;">2021</td>
+<td style="text-align: right;">1</td>
+<td>Finance</td>
+<td>Blank Checks</td>
+</tr>
+<tr class="even">
+<td>SVREW</td>
+<td>SaverOne 2014 Ltd.&nbsp;Warrant</td>
+<td>$0.099</td>
+<td style="text-align: right;">0.0</td>
+<td>0.00%</td>
+<td style="text-align: right;">6.88834400E+06</td>
+<td>Israel</td>
+<td style="text-align: right;">2022</td>
+<td style="text-align: right;">1</td>
+<td>Technology</td>
+<td>EDP Services</td>
+</tr>
+<tr class="odd">
+<td>NTRBW</td>
+<td>Nutriband Inc.&nbsp;Warrant</td>
+<td>$0.55</td>
+<td style="text-align: right;">0.0</td>
+<td>0.00%</td>
+<td style="text-align: right;">6.03342900E+06</td>
+<td>United States</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">1</td>
+<td>Health Care</td>
+<td>Industrial Specialties</td>
+</tr>
+<tr class="even">
+<td>CCZ</td>
+<td>Comcast Holdings ZONES</td>
+<td>$54.81</td>
+<td style="text-align: right;">0.0</td>
+<td>0.00%</td>
+<td style="text-align: right;">2.15053944E+11</td>
+<td>United States</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">1</td>
+<td>Telecommunications</td>
+<td>Cable &amp; Other Pay Television Services</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>I now know that I want to re-use <code>data/nasdaq-instrument-list.csv</code> so I’ll extract it onto it’s own expression via <code>def</code>.</p>
+<p>Visualising information is very easy too. Because the US holds the vast majority of entries, I am applying a logarithmic scale to keep the sizes of the bars consistent, albeit the values are pretty skewed towards a few entries.</p>
+<div class="sourceClojure">
+<div class="sourceCode" id="cb4"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> nasdaq-instruments</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">-&gt;</span> <span class="st">"data/nasdaq-instrument-list.csv"</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>      (tc/dataset {<span class="at">:key-fn</span> (<span class="kw">comp</span> <span class="kw">keyword</span> util/to-kebab-case)})))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="sourceClojure">
+<div class="sourceCode" id="cb5"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> nasdaq-instruments</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  (tc/group-by [<span class="at">:country</span>])</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  (tc/aggregate {<span class="at">:count</span> tc/row-count})</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  (hanami/plot ht/bar-chart {</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">:X</span> <span class="at">:country</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                             <span class="at">:Y</span> <span class="at">:count</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                             <span class="at">:XTYPE</span> <span class="at">:nominal</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                             <span class="at">:WIDTH</span> <span class="dv">1000</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                             <span class="at">:YSCALE</span> {<span class="at">:type</span> <span class="st">"log"</span>}}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"scale":{"type":"log"},"field":"count","type":"quantitative"},"x":{"field":"country","type":"nominal"}},"usermeta":{"embedOptions":{"renderer":"svg"}},"mark":{"type":"bar","tooltip":true},"width":1000,"background":"white","height":300,"data":{"url":"cashcloj.core_files\/0.csv","format":{"type":"csv"}}});</script></div>
+</section>
+<section id="plotting-data" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="plotting-data"><span class="header-section-number">3.2</span> Plotting data</h2>
+<p><a href="https://github.com/jsa-aerial/hanami">hanami</a> makes use of the <a href="https://vega.github.io/vega-lite/">VEGA LITE</a> specification for plotting charts</p>
+<p>It works seamlessly with <code>tc/dataset</code>. Look at how smooth this code is! I am:</p>
+<ul>
+<li>Parsing a CSV with time series data</li>
+<li>Adding 2 new columns <code>pct-change</code> and <code>highly-volatile</code></li>
+<li>Plotting a point chart where highly volatile data points are highlighted in a different colour</li>
+</ul>
+<div class="sourceClojure">
+<div class="sourceCode" id="cb6"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> <span class="st">"data/instruments/1INCH-USD.csv"</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (tc/dataset {<span class="at">:key-fn</span> (<span class="kw">comp</span> <span class="kw">keyword</span> util/to-kebab-case)})</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  (tc/map-columns <span class="at">:pct-change</span> [<span class="at">:open</span> <span class="at">:close</span>] (<span class="kw">fn</span> [open close] (<span class="kw">-&gt;</span> close</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                                                                  (<span class="kw">-</span> open)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                                                                   (<span class="kw">*</span> <span class="dv">100</span>))))</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  (tc/map-columns <span class="at">:highly-volatile</span> [<span class="at">:pct-change</span>] #(<span class="kw">or</span> (tcc/&gt; <span class="va">%</span> <span class="fl">6.0</span>) (tcc/&lt; <span class="va">%</span> -<span class="fl">6.0</span>)))</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  (hanami/plot ht/point-chart {</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                               <span class="at">:X</span>     <span class="at">:date</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                               <span class="at">:Y</span>     <span class="at">:pct-change</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>                               <span class="at">:XTYPE</span> <span class="at">:temporal</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>                               <span class="at">:WIDTH</span> <span class="dv">1000</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>                               <span class="at">:COLOR</span> {<span class="at">:field</span> <span class="at">:highly-volatile</span>}</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>                               }))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"field":"pct-change","type":"quantitative"},"color":{"field":"highly-volatile"},"x":{"field":"date","type":"temporal"}},"usermeta":{"embedOptions":{"renderer":"svg"}},"mark":{"type":"circle","tooltip":true},"width":1000,"background":"white","height":300,"data":{"url":"cashcloj.core_files\/1.csv","format":{"type":"csv"}}});</script></div>
+</section>
+<section id="closing-remarks" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="closing-remarks"><span class="header-section-number">3.3</span> Closing remarks</h2>
+<p>I initially thought this would be a how-to piece but it evolved into being more of a “stack review”. My only points of comparison are to use Snowflake + SQL to plot, slice &amp; dice. Or a more widely adopted solution like Jupyter, Numpy &amp; others.</p>
+<p>I find this stack to be oddly entising, it’s just so simple and highly declarative, there’s python interop and lazily evaluated collections may mean its a lot less code to write than if I were using Numpy. Time will only tell</p>
+<p>It would be nice to see <code>tc/dataset</code> being able to take in an SQL connection and manage long running queries elegantly straight from the text editor.</p>
+<p>I’ll be posting more in the coming days, stay tuned.</p>
+<div style="background-color:grey;height:2px;width:100%;"></div>
+<div><pre><small><small>source: src/cashcloj/core.clj</small></small></pre></div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./bin.html" class="pagination-link" aria-label="Welcome to Cashcloj,">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Welcome to Cashcloj,</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
