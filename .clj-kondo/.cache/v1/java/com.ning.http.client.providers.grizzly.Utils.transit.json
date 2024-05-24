@@ -1,1 +1,0 @@
-["^ ","~:members",["^ ","getAndSetNtlmAttempted",["~#set",[["^ ","~:flags",["^2",["~:method","~:public","~:static"]]]]],"setNtlmEstablished",["^2",[["^ ","^3",["^2",["^4","^5","^6"]]]]],"isNtlmEstablished",["^2",[["^ ","^3",["^2",["^4","^5","^6"]]]]],"isSecure",["^2",[["^ ","^3",["^2",["^4","^5","^6"]]]]]]]

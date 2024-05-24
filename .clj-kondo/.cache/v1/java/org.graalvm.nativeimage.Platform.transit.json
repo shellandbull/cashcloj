@@ -1,1 +1,0 @@
-["^ ","~:members",["^ ","PLATFORM_PROPERTY_NAME",["~#set",[["^ ","~:flags",["^2",["~:public","~:static","~:field","~:final"]]]]],"includedIn",["^2",[["^ ","^3",["^2",["~:method","^4","^5"]]]]],"getOS",["^2",[["^ ","^3",["^2",["^9","^4"]]]]],"getArchitecture",["^2",[["^ ","^3",["^2",["^9","^4"]]]]]]]
