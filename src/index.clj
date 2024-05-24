@@ -1,5 +1,5 @@
 ^:kindly/hide-code
-(ns bin
+(ns index
   (:require
    [scicloj.kindly.v4.kind :as kind]))
 
