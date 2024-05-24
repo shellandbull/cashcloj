@@ -1,0 +1,78 @@
+
+---
+format:
+  html: {toc: true, toc-depth: 4, theme: cosmo, output-file: build.html}
+fontsize: 0.9em
+code-block-background: true
+include-in-header: {text: '<link rel = "icon" href = "data:," />'}
+
+---
+<style></style><style>.printedClojure .sourceCode {
+  background-color: transparent;
+  border-style: none;
+}
+</style><style>.clay-limit-image-width .clay-image {max-width: 100%}
+</style>
+<script src="build_files/md-default0.js" type="text/javascript"></script><script src="build_files/md-default1.js" type="text/javascript"></script>
+
+::: {.sourceClojure}
+```clojure
+(ns build
+  (:require
+   [aerial.hanami.common :as hc]
+   [scicloj.clay.v2.api :as clay]))
+```
+:::
+
+
+
+::: {.sourceClojure}
+```clojure
+(defn build-book []
+  (swap! hc/_defaults
+         assoc
+         :BACKGROUND "white")
+
+  (clay/make!
+    {:show             false
+     :run-quarto       false
+     :format           [:quarto :html]
+     :book             {:title "Cashcloj | Data Science in Clojure"}
+     :base-source-path "src"
+     :base-target-path "docs"
+     :subdirs-to-sync  ["src" "data"]
+     :source-path      ["index.clj"
+                   "cashcloj/core.clj"]}))
+```
+:::
+
+
+
+::: {.sourceClojure}
+```clojure
+(build-book)
+```
+:::
+
+
+
+::: {.printedClojure}
+```clojure
+[[[[:wrote "docs/bin.qmd"] nil]
+  [[:wrote "docs/cashcloj.core.qmd"] nil]]
+ [[:wrote "docs/_quarto.yml"] [:wrote "docs/index.qmd"] nil]]
+
+```
+:::
+
+
+
+```{=html}
+<div style="background-color:grey;height:2px;width:100%;"></div>
+```
+
+
+
+```{=html}
+<div><pre><small><small>source: bin/build.clj</small></small></pre></div>
+```

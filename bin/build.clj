@@ -19,6 +19,4 @@
      :source-path      ["index.clj"
                    "cashcloj/core.clj"]}))
 
-(defn build-cli [_]
-  (build-book)
-  (System/exit 0))
+(build-book)

@@ -13,19 +13,18 @@ include-in-header: {text: '<link rel = "icon" href = "data:," />'}
 }
 </style><style>.clay-limit-image-width .clay-image {max-width: 100%}
 </style>
-<script src="cashcloj.core_files/md-default0.js" type="text/javascript"></script><script src="cashcloj.core_files/md-default1.js" type="text/javascript"></script>
+<script src="cashcloj.core_files/md-default2.js" type="text/javascript"></script><script src="cashcloj.core_files/md-default3.js" type="text/javascript"></script><script src="cashcloj.core_files/vega4.js" type="text/javascript"></script><script src="cashcloj.core_files/vega5.js" type="text/javascript"></script><script src="cashcloj.core_files/vega6.js" type="text/javascript"></script>
 
 ::: {.sourceClojure}
 ```clojure
 (ns cashcloj.core
-  (:require [scicloj.clay.v2.api :as clay]
+    (:require [scicloj.clay.v2.api :as clay]
             [clojure.string :as str]
+            [cashcloj.utils :as util]
             [tablecloth.api :as tc]
             [tablecloth.column.api :as tcc]
-            [cashcloj.utils :as util]
             [scicloj.clay.v2.api :as clay]
             [scicloj.noj.v1.vis.hanami :as hanami]
-            [tech.v3.dataset.math :as math]
             [scicloj.kindly.v4.kind :as kind]
             [aerial.hanami.templates :as ht]))
 ```
@@ -33,63 +32,201 @@ include-in-header: {text: '<link rel = "icon" href = "data:," />'}
 
 
 
-::: {.sourceClojure}
-```clojure
-(def btc-usd
-  (-> "data/instruments/BTC-USD.csv"
-    (tc/dataset {:key-fn (comp keyword util/to-kebab-case)})
-    (util/add-pct-change)
-    (util/add-highly-volatile)))
-```
-:::
+# NASDAQ & Cryptocurrency timeseries
+
+This is my first exploration in the world of data science using the [Scicloj stack](https://scicloj.github.io/).
+I decided to give it a go due to it's [interactive programming](https://docs.cider.mx/cider/usage/interactive_programming.html) capacities.
+The concept was introduced to me during a [London Clojurians](https://londonclojurians.org/) talk ["From data to insights: Clojure for data deep dive"](https://www.youtube.com/watch?v=eUFf3-og_-Y).
+
+This HTML document was rendered using [Clay](https://github.com/scicloj/clay), which evaluated a `.clj` file that behaves like a notebook
+
+**What's the stack?**
+
+- [Spacemacs](https://www.spacemacs.org/) as my text editor. It comes with plugins for [Clay](https://github.com/scicloj/clay) & [Clojure via Cider](https://github.com/clojure-emacs/cider)
+- [Clojure](https://clojure.org/) A dynamically typed lisp dialect that calls the JVM home
+- [Tablecloth](https://scicloj.github.io/tablecloth) a `dataframe` like manipulation library. Similar to Pandas
+- [Clay](https://github.com/scicloj/clay) for data visualizations in a dynamic fashion
+
+**What'll be doing**
+
+I downloaded timeseries price data from all the instruments from [NASDAQ](https://www.nasdaq.com/) and the top 250 cryptocurrencies from [Binance](https://www.binance.com/). In this post we'll
+perform some simple operations on the dataset, but in the future I hope to publish some more sophisticated ML studies alongside some richer visualisations
+
+In this first exploration I will keep things extremely simple.
+
+We'll visualise the data as a table, do some transformations and render some charts.
+
+**How I'm doing it**
+
+Spacemacs has packages for Clay & Cider. I can evaluate the code on my editor as I go and either have it pop onto a buffer or even render it's output as HTML.
+
+
+
+## Reading a dataset
+
+It's really simple. Just invoke `tc/dataset` over a URL or filename and you'll immediately get a primitive in which is very
+easy to operate on.
+
+In this example I just select a few columns and keep the top 10.
+
+I also added a function `to-kebab-case` which casts the datasets keys in `this-format`
+
+[tablecloth documentation](https://scicloj.github.io/tablecloth/)
 
 
 
 ::: {.sourceClojure}
 ```clojure
-(-> btc-usd
-  (tc/separate-column :date [:day :month :year] (fn [date] [(.getDayOfMonth date) (.getMonth date) (.getYear date)]))
-  (math/correlation-table) (get :highly-volatile))
-```
-:::
-
-
-
-::: {.printedClojure}
-```clojure
-[[:highly-volatile 1.0] [:volume 0.42316347179312186] [:pct-change 0.1564811977950932] [:high 0.13421352127148156] [:close 0.1203641675668868] [:adj-close 0.1203641675668868] [:year 0.11169572016826253] [:open 0.11055815795644011] [:low 0.09117704753518348] [:day -0.03798082508619887]]
-
-```
-:::
-
-
-
-::: {.sourceClojure}
-```clojure
-(-> btc-usd
-    (tc/head 10))
+(-> "data/nasdaq-instrument-list.csv"
+  (tc/dataset {:key-fn (comp keyword util/to-kebab-case)})
+  (tc/select-columns [:symbol :name])
+  (tc/head 10))
 ```
 :::
 
 
 ::: {.clay-dataset}
-data/instruments/BTC-USD.csv [10 9]:
+data/nasdaq-instrument-list.csv [10 2]:
 
-|      :date |     :adj-close |         :close |          :high |           :low |          :open |     :volume | :pct-change | :highly-volatile |
-|------------|---------------:|---------------:|---------------:|---------------:|---------------:|------------:|------------:|-----------------:|
-| 2023-07-14 | 30334.06835938 | 30334.06835938 | 31582.25390625 | 29966.38671875 | 31474.72070312 | 20917902660 | -3.62402690 |                0 |
-| 2023-07-15 | 30295.80664062 | 30295.80664062 | 30407.78125000 | 30263.46289062 | 30331.78320312 |  8011667756 | -0.11861011 |                0 |
-| 2023-07-16 | 30249.13281250 | 30249.13281250 | 30437.56054688 | 30089.66992188 | 30297.47265625 |  8516564470 | -0.15955075 |                0 |
-| 2023-07-17 | 30145.88867188 | 30145.88867188 | 30336.40039062 | 29685.78320312 | 30249.62695312 | 13240156074 | -0.34294070 |                0 |
-| 2023-07-18 | 29856.56250000 | 29856.56250000 | 30233.65625000 | 29556.42773438 | 30147.07031250 | 13138897269 | -0.96363530 |                0 |
-| 2023-07-19 | 29913.92382812 | 29913.92382812 | 30184.18164062 | 29794.26953125 | 29862.04687500 | 12128602812 |  0.17372203 |                0 |
-| 2023-07-20 | 29792.01562500 | 29792.01562500 | 30195.53125000 | 29638.09570312 | 29915.25000000 | 14655207121 | -0.41194499 |                0 |
-| 2023-07-21 | 29908.74414062 | 29908.74414062 | 30045.99804688 | 29733.85156250 | 29805.11132812 | 10972789818 |  0.34770148 |                0 |
-| 2023-07-22 | 29771.80273438 | 29771.80273438 | 29991.61523438 | 29664.12109375 | 29908.69726562 |  7873300598 | -0.45770810 |                0 |
-| 2023-07-23 | 30084.53906250 | 30084.53906250 | 30330.64062500 | 29741.52734375 | 29790.11132812 |  9220145050 |  0.98834050 |                0 |
+| :symbol |                                                   :name |
+|---------|---------------------------------------------------------|
+|       A |                  Agilent Technologies Inc. Common Stock |
+|      AA |                          Alcoa Corporation Common Stock |
+|    AACG |        ATA Creativity Global American Depositary Shares |
+|    AACI |                 Armada Acquisition Corp. I Common Stock |
+|   AACIW |                      Armada Acquisition Corp. I Warrant |
+|    AACT | Ares Acquisition Corporation II Class A Ordinary Shares |
+|    AADI |                       Aadi Bioscience Inc. Common Stock |
+|    AAGR |          African Agriculture Holdings Inc. Common Stock |
+|   AAGRW |               African Agriculture Holdings Inc. Warrant |
+|     AAL |               American Airlines Group Inc. Common Stock |
 
 
 :::
+
+
+
+Ordering is very easy too
+
+
+
+::: {.sourceClojure}
+```clojure
+(-> "data/nasdaq-instrument-list.csv"
+  (tc/dataset {:key-fn (comp keyword util/to-kebab-case)})
+  (tc/order-by :volume)
+  (tc/head 10))
+```
+:::
+
+
+::: {.clay-dataset}
+data/nasdaq-instrument-list.csv [10 11]:
+
+| :symbol |                                                       :name | :last-sale | :net-change | :%-change |    :market-cap |      :country | :ipo-year | :volume |            :sector |                             :industry |
+|---------|-------------------------------------------------------------|------------|------------:|-----------|---------------:|---------------|----------:|--------:|--------------------|---------------------------------------|
+|   CNFRZ | Conifer Holdings Inc. 9.75% Senior Unsecured Notes due 2028 |     $11.50 |         0.0 |     0.00% | 1.40563132E+08 | United States |           |       1 |                    |                                       |
+|    CFFS |               CF Acquisition Corp. VII Class A Common Stock |     $10.84 |         0.0 |     0.00% | 0.00000000E+00 | United States |      2022 |       1 |            Finance |                          Blank Checks |
+|   PDYNW |                                  Palladyne AI Corp Warrants |    $0.0505 |         0.0 |     0.00% | 1.30795000E+06 | United States |           |       1 |        Industrials |       Industrial Machinery/Components |
+|    KACL |           Kairous Acquisition Corp. Limited Ordinary Shares |     $11.72 |         0.0 |     0.00% | 0.00000000E+00 |      Malaysia |      2022 |       1 |            Finance |                          Blank Checks |
+|   AONCW |                      American Oncology Network Inc. Warrant |     $0.265 |         0.0 |     0.00% | 9.46486300E+06 | United States |      2021 |       1 |        Health Care |              Medical/Nursing Services |
+|   BBLGW |                                Bone Biologics Corp Warrants |     $23.79 |         0.0 |     0.00% | 1.27095220E+07 | United States |           |       1 |        Health Care |                Industrial Specialties |
+|    PMGM |        Priveterra Acquisition Corp. II Class A Common Stock |     $11.09 |         0.0 |     0.00% | 0.00000000E+00 | United States |      2021 |       1 |            Finance |                          Blank Checks |
+|   SVREW |                                  SaverOne 2014 Ltd. Warrant |     $0.099 |         0.0 |     0.00% | 6.88834400E+06 |        Israel |      2022 |       1 |         Technology |                          EDP Services |
+|   NTRBW |                                      Nutriband Inc. Warrant |      $0.55 |         0.0 |     0.00% | 6.03342900E+06 | United States |           |       1 |        Health Care |                Industrial Specialties |
+|     CCZ |                                      Comcast Holdings ZONES |     $54.81 |         0.0 |     0.00% | 2.15053944E+11 | United States |           |       1 | Telecommunications | Cable & Other Pay Television Services |
+
+
+:::
+
+
+
+I now know that I want to re-use `data/nasdaq-instrument-list.csv` so I'll extract it onto it's own expression via `def`.
+
+Visualising information is very easy too. Because the US holds the vast majority of entries, I am applying a logarithmic scale to keep the sizes of the bars consistent, albeit the values are pretty skewed towards a few entries.
+
+
+
+::: {.sourceClojure}
+```clojure
+(def nasdaq-instruments
+  (-> "data/nasdaq-instrument-list.csv"
+      (tc/dataset {:key-fn (comp keyword util/to-kebab-case)})))
+```
+:::
+
+
+
+::: {.sourceClojure}
+```clojure
+(-> nasdaq-instruments
+  (tc/group-by [:country])
+  (tc/aggregate {:count tc/row-count})
+  (hanami/plot ht/bar-chart {
+                             :X :country
+                             :Y :count
+                             :XTYPE :nominal
+                             :WIDTH 1000
+                             :YSCALE {:type "log"}}))
+```
+:::
+
+
+
+```{=html}
+<div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"scale":{"type":"log"},"field":"count","type":"quantitative"},"x":{"field":"country","type":"nominal"}},"usermeta":{"embedOptions":{"renderer":"svg"}},"mark":{"type":"bar","tooltip":true},"width":1000,"background":"white","height":300,"data":{"url":"cashcloj.core_files\/0.csv","format":{"type":"csv"}}});</script></div>
+```
+
+
+
+## Plotting data
+
+[hanami](https://github.com/jsa-aerial/hanami) makes use of the [VEGA LITE](https://vega.github.io/vega-lite/) specification for plotting charts
+
+It works seamlessly with `tc/dataset`. Look at how smooth this code is! I am:
+
+- Parsing a CSV with time series data
+- Adding 2 new columns `pct-change` and `highly-volatile`
+- Plotting a point chart where highly volatile data points are highlighted in a different colour
+
+
+
+::: {.sourceClojure}
+```clojure
+(-> "data/instruments/1INCH-USD.csv"
+  (tc/dataset {:key-fn (comp keyword util/to-kebab-case)})
+  (tc/map-columns :pct-change [:open :close] (fn [open close] (-> close
+                                                                  (- open)
+                                                                   (* 100))))
+  (tc/map-columns :highly-volatile [:pct-change] #(or (tcc/> % 6.0) (tcc/< % -6.0)))
+  (hanami/plot ht/point-chart {
+                               :X     :date
+                               :Y     :pct-change
+                               :XTYPE :temporal
+                               :WIDTH 1000
+                               :COLOR {:field :highly-volatile}
+                               }))
+```
+:::
+
+
+
+```{=html}
+<div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"field":"pct-change","type":"quantitative"},"color":{"field":"highly-volatile"},"x":{"field":"date","type":"temporal"}},"usermeta":{"embedOptions":{"renderer":"svg"}},"mark":{"type":"circle","tooltip":true},"width":1000,"background":"white","height":300,"data":{"url":"cashcloj.core_files\/1.csv","format":{"type":"csv"}}});</script></div>
+```
+
+
+
+## Closing remarks
+
+I initially thought this would be a how-to piece but it evolved into being more of a "stack review". My only points of comparison are to use Snowflake + SQL to plot, slice & dice. Or a more widely adopted solution like Jupyter, Numpy & others.
+
+I find this stack to be oddly entising, it's just so simple and highly declarative, there's python interop and lazily evaluated
+collections may mean its a lot less code to write than if I were using Numpy. Time will only tell
+
+It would be nice to see `tc/dataset` being able to take in an SQL connection and manage long running queries elegantly straight from the text editor.
+
+I'll be posting more in the coming days, stay tuned.
 
 
 
@@ -100,5 +237,5 @@ data/instruments/BTC-USD.csv [10 9]:
 
 
 ```{=html}
-<div><pre><small><small>source: src/cashcloj/bitcoin.clj</small></small></pre></div>
+<div><pre><small><small>source: src/cashcloj/core.clj</small></small></pre></div>
 ```

@@ -14,5 +14,6 @@
                  [edu.stanford.nlp/stanford-corenlp "4.5.7" :classifier "models-english-kbp"]
                  [com.cnuernber/charred "1.034"]
                  [generateme/fastmath "2.4.0"]]
+  :plugins       [[lein-exec "0.3.7"]]
   :resource-paths ["data"]
   :repl-options {:init-ns cashcloj.core})
