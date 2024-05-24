@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Cashcloj | Data Science in Clojure - 3&nbsp; NASDAQ &amp; Cryptocurrency timeseries</title>
+<title>Cashcloj | Data Science in Clojure - 2&nbsp; NASDAQ &amp; Cryptocurrency timeseries</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -64,7 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./bin.html" rel="prev">
+<link href="./index.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./cashcloj.core.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">NASDAQ &amp; Cryptocurrency timeseries</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./cashcloj.core.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">NASDAQ &amp; Cryptocurrency timeseries</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -143,19 +143,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Cashcloj | Data Science in Clojure</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./bin.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Welcome to Cashcloj,</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Welcome to Cashcloj,</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./cashcloj.core.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">NASDAQ &amp; Cryptocurrency timeseries</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">NASDAQ &amp; Cryptocurrency timeseries</span></span></a>
   </div>
 </li>
     </ul>
@@ -168,9 +162,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#reading-a-dataset" id="toc-reading-a-dataset" class="nav-link active" data-scroll-target="#reading-a-dataset"><span class="header-section-number">3.1</span> Reading a dataset</a></li>
-  <li><a href="#plotting-data" id="toc-plotting-data" class="nav-link" data-scroll-target="#plotting-data"><span class="header-section-number">3.2</span> Plotting data</a></li>
-  <li><a href="#closing-remarks" id="toc-closing-remarks" class="nav-link" data-scroll-target="#closing-remarks"><span class="header-section-number">3.3</span> Closing remarks</a></li>
+  <li><a href="#reading-a-dataset" id="toc-reading-a-dataset" class="nav-link active" data-scroll-target="#reading-a-dataset"><span class="header-section-number">2.1</span> Reading a dataset</a></li>
+  <li><a href="#plotting-data" id="toc-plotting-data" class="nav-link" data-scroll-target="#plotting-data"><span class="header-section-number">2.2</span> Plotting data</a></li>
+  <li><a href="#closing-remarks" id="toc-closing-remarks" class="nav-link" data-scroll-target="#closing-remarks"><span class="header-section-number">2.3</span> Closing remarks</a></li>
   </ul>
 </nav>
     </div>
@@ -179,7 +173,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">NASDAQ &amp; Cryptocurrency timeseries</span></h1>
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">NASDAQ &amp; Cryptocurrency timeseries</span></h1>
 </div>
 
 
@@ -236,8 +230,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We’ll visualise the data as a table, do some transformations and render some charts.</p>
 <p><strong>How I’m doing it</strong></p>
 <p>Spacemacs has packages for Clay &amp; Cider. I can evaluate the code on my editor as I go and either have it pop onto a buffer or even render it’s output as HTML.</p>
-<section id="reading-a-dataset" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="reading-a-dataset"><span class="header-section-number">3.1</span> Reading a dataset</h2>
+<section id="reading-a-dataset" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="reading-a-dataset"><span class="header-section-number">2.1</span> Reading a dataset</h2>
 <p>It’s really simple. Just invoke <code>tc/dataset</code> over a URL or filename and you’ll immediately get a primitive in which is very easy to operate on.</p>
 <p>In this example I just select a few columns and keep the top 10.</p>
 <p>I also added a function <code>to-kebab-case</code> which casts the datasets keys in <code>this-format</code></p>
@@ -493,8 +487,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"scale":{"type":"log"},"field":"count","type":"quantitative"},"x":{"field":"country","type":"nominal"}},"usermeta":{"embedOptions":{"renderer":"svg"}},"mark":{"type":"bar","tooltip":true},"width":1000,"background":"white","height":300,"data":{"url":"cashcloj.core_files\/0.csv","format":{"type":"csv"}}});</script></div>
 </section>
-<section id="plotting-data" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="plotting-data"><span class="header-section-number">3.2</span> Plotting data</h2>
+<section id="plotting-data" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="plotting-data"><span class="header-section-number">2.2</span> Plotting data</h2>
 <p><a href="https://github.com/jsa-aerial/hanami">hanami</a> makes use of the <a href="https://vega.github.io/vega-lite/">VEGA LITE</a> specification for plotting charts</p>
 <p>It works seamlessly with <code>tc/dataset</code>. Look at how smooth this code is! I am:</p>
 <ul>
@@ -519,8 +513,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"field":"pct-change","type":"quantitative"},"color":{"field":"highly-volatile"},"x":{"field":"date","type":"temporal"}},"usermeta":{"embedOptions":{"renderer":"svg"}},"mark":{"type":"circle","tooltip":true},"width":1000,"background":"white","height":300,"data":{"url":"cashcloj.core_files\/1.csv","format":{"type":"csv"}}});</script></div>
 </section>
-<section id="closing-remarks" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="closing-remarks"><span class="header-section-number">3.3</span> Closing remarks</h2>
+<section id="closing-remarks" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="closing-remarks"><span class="header-section-number">2.3</span> Closing remarks</h2>
 <p>I initially thought this would be a how-to piece but it evolved into being more of a “stack review”. My only points of comparison are to use Snowflake + SQL to plot, slice &amp; dice. Or a more widely adopted solution like Jupyter, Numpy &amp; others.</p>
 <p>I find this stack to be oddly entising, it’s just so simple and highly declarative, there’s python interop and lazily evaluated collections may mean its a lot less code to write than if I were using Numpy. Time will only tell</p>
 <p>It would be nice to see <code>tc/dataset</code> being able to take in an SQL connection and manage long running queries elegantly straight from the text editor.</p>
@@ -943,8 +937,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./bin.html" class="pagination-link" aria-label="Welcome to Cashcloj,">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Welcome to Cashcloj,</span></span>
+      <a href="./index.html" class="pagination-link" aria-label="Welcome to Cashcloj,">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Welcome to Cashcloj,</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
