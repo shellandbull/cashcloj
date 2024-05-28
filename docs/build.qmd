@@ -40,7 +40,7 @@ include-in-header: {text: '<link rel = "icon" href = "data:," />'}
      :book             {:title "Cashcloj | Data Science in Clojure"}
      :base-source-path "src"
      :base-target-path "docs"
-     :subdirs-to-sync  ["src" "data"]
+     :subdirs-to-sync  ["src" "data/book"]
      :source-path      ["index.clj"
                    "cashcloj/core.clj"]}))
 ```
@@ -58,9 +58,9 @@ include-in-header: {text: '<link rel = "icon" href = "data:," />'}
 
 ::: {.printedClojure}
 ```clojure
-[[[[:wrote "docs/bin.qmd"] nil]
+[[[[:wrote "docs/index.qmd"] nil]
   [[:wrote "docs/cashcloj.core.qmd"] nil]]
- [[:wrote "docs/_quarto.yml"] [:wrote "docs/index.qmd"] nil]]
+ [[:wrote "docs/_quarto.yml"] [:ok] nil]]
 
 ```
 :::
