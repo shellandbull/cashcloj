@@ -24,7 +24,7 @@
     "href": "cashcloj.core.html",
     "title": "2  NASDAQ & Cryptocurrency timeseries",
     "section": "",
-    "text": "2.1 Reading a dataset\nIt’s really simple. Just invoke tc/dataset over a URL or filename and you’ll immediately get a primitive in which is very easy to operate on.\nIn this example I just select a few columns and keep the top 10.\nI also added a function to-kebab-case which casts the datasets keys in this-format\ntablecloth documentation\nOrdering is very easy too\nI now know that I want to re-use data/nasdaq-instrument-list.csv so I’ll extract it onto it’s own expression via def.\nVisualising information is very easy too. Because the US holds the vast majority of entries, I am applying a logarithmic scale to keep the sizes of the bars consistent, albeit the values are pretty skewed towards a few entries.",
+    "text": "2.1 Reading a dataset\nIt’s really simple. Just invoke tc/dataset over a URL or filename and you’ll immediately get a primitive in which is very easy to operate on. In this example I just select a few columns and kept the top 10.\nI also added a function to-kebab-case which casts the datasets keys in this-format\ntablecloth documentation\nOrdering is very easy too\nI now know that I want to re-use data/nasdaq-instrument-list.csv so I’ll extract it onto it’s own expression via def.\nVisualising information is very easy too. Because the US holds the vast majority of entries, I am applying a logarithmic scale to keep the sizes of the bars consistent, albeit the values are pretty skewed towards a few entries.",
     "crumbs": [
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>NASDAQ & Cryptocurrency timeseries</span>"
     ]
