@@ -45,9 +45,7 @@ Spacemacs has packages for Clay & Cider. I can evaluate the code on my editor as
 ## Reading a dataset
 
 It's really simple. Just invoke `tc/dataset` over a URL or filename and you'll immediately get a primitive in which is very
-easy to operate on.
-
-In this example I just select a few columns and keep the top 10.
+easy to operate on. In this example I just select a few columns and kept the top 10.
 
 I also added a function `to-kebab-case` which casts the datasets keys in `this-format`
 

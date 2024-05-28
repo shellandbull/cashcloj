@@ -4,9 +4,9 @@
     "href": "index.html",
     "title": "Cashcloj | Data Science in Clojure",
     "section": "",
-    "text": "1 Welcome to Cashcloj,\nMy name is Mario Gintili. You can find me on Github @shellandbull.\nData Science, Data Engineering & Machine Learning have always been a personal interest of mine. During my uni years I was an economics major and I had a deep passion for decision modelling alla Moneyball. My inspiration came from films of the sort\nI’m originally a Rubyist and I was introduced to Clojure long time ago. This year(2024, in case you are reading this in the future) I saw a talk @ London Clojurians by the Scicloj which showcased a new stack for DS/ML. The stack includes:\nThis site is a documents my journey learning the ML/DS chops\nJoin me on my silly explorations",
+    "text": "1 Welcome to Cashcloj\nFind me on Github @shellandbull & on Linkedin\nMachine learning & data science have always been an interest of mine. Originally an economics major now turned into a software engineer, I had a deep passion for decision modelling. My inspiration for it came from movies like Moneyball & A beautiful mind\nI’m originally a Rubyist, I was introduced to Clojure long time ago, but I never got around using it commercially due to how hard it is to find a Clojure job. This year(2024, in case you are reading this in the future) I saw a talk @ London Clojurians by the Scicloj which showcased a new stack for DS/ML. The stack includes:\nThis humble Quarto journal you see is a wee attempt at documenting my steps towards achieving prowess at modern, applied ML/DS.\nJoin me on my silly explorations",
     "crumbs": [
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Welcome to Cashcloj,</span>"
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Welcome to Cashcloj</span>"
     ]
   },
   {
@@ -14,9 +14,9 @@
     "href": "index.html#goals",
     "title": "Cashcloj | Data Science in Clojure",
     "section": "1.1 Goals",
-    "text": "1.1 Goals\n\nLearn to use emacs in evil mode\nLearn data engineering. The usual stuff like feature engineering, scrubbing data, joining datasets, formulating the right questions\nLearn Clojure. My background’s in OOP dynamically typed languages, this is my first lisp\nLearn Scicloj\n\n\nsource: src/index.clj",
+    "text": "1.1 Goals\n\nLearn emacs in evil mode\nLearn data engineering\nLearn machine learning\nLearn Clojure\nUse the Scicloj stack to achieve all of the above\n\n\nsource: src/index.clj",
     "crumbs": [
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Welcome to Cashcloj,</span>"
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Welcome to Cashcloj</span>"
     ]
   },
   {
